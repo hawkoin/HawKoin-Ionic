@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { StudentPage } from "../student/student"
 import { VendorPage } from "../vendor/vendor"
+import { AdminPage } from "../admin/admin"
 
 @Component({
   selector: 'page-login',
@@ -14,6 +15,6 @@ export class LoginPage {
   }
   
   navigateToNextPage(): void {
-    this.navCtrl.push(VendorPage);
+    this.navCtrl.push(AdminPage);
   }
 }

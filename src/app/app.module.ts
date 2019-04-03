@@ -9,6 +9,8 @@ import { AdminPage } from '../pages/admin/admin';
 import { ReceiptPage } from '../pages/receipt/receipt';
 
 import { QRCodeModule } from 'angular2-qrcode';
+import { HttpClientModule } from '@angular/common/http';
+
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -24,7 +26,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ReceiptPage
   ],
   imports: [
-    BrowserModule,QRCodeModule,
+    BrowserModule,QRCodeModule, HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
