@@ -13,7 +13,7 @@ export class StudentPage {
   toggleBalance(): void {
     var text = document.getElementById("student-markdown2");
   if (text.hidden) {
-    text.innerHTML = "Swapped text!";
+    text.innerHTML = "Balance: $0";
     text.hidden = false;
   } else {
     text.hidden = true;

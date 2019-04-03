@@ -8,6 +8,7 @@ import { VendorPage } from '../pages/vendor/vendor';
 import { AdminPage } from '../pages/admin/admin';
 import { ReceiptPage } from '../pages/receipt/receipt';
 
+import { QRCodeModule } from 'angular2-qrcode';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -22,7 +23,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ReceiptPage
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,QRCodeModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
