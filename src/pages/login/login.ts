@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { StudentPage } from "../student/student"
+import { VendorPage } from "../vendor/vendor"
 
 @Component({
   selector: 'page-login',
@@ -12,7 +13,7 @@ export class LoginPage {
   constructor(public navCtrl: NavController) {
   }
   
-  navigateToStudent(): void {
-    this.navCtrl.push(StudentPage);
+  navigateToNextPage(): void {
+    this.navCtrl.push(VendorPage);
   }
 }
