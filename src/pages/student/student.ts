@@ -21,14 +21,12 @@ export class StudentPage {
     var text = document.getElementById("student-markdown2");
     var buttonText = document.getElementById("student-button3");
 
-    this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
-    console.log(response);
-       });
-
-
   if (text.hidden) {
 
-    text.innerHTML = "Balance: $0";
+    this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
+    var parsedJ =  JSON.parse(JSON.stringify(response))
+    text.innerHTML = parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName  + " Balance: " + parsedJ.balance;
+       });
 
     text.hidden = false;
     buttonText.textContent = "Hide Balance"

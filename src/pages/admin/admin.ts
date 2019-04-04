@@ -13,7 +13,7 @@ export class AdminPage {
   constructor(public navCtrl: NavController, private http: HttpClient) {
     this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.TransferFunds').subscribe((response) => {
     console.log(response);
-    var list = document.getElementById("admin-list-item4");
+    //var list = document.getElementById("admin-list-item4");
     
 
     //list.innerHTML = response[0].fromUser + " " + response[0].toUser + " " + response[0].amount;
