@@ -15,6 +15,6 @@ export class LoginPage {
   }
   
   navigateToNextPage(): void {
-    this.navCtrl.push(AdminPage);
+    this.navCtrl.push(VendorPage);
   }
 }

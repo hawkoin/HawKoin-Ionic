@@ -11,7 +11,7 @@ import { ReceiptPage } from '../pages/receipt/receipt';
 import { QRCodeModule } from 'angular2-qrcode';
 import { HttpClientModule } from '@angular/common/http';
 
-
+import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -42,6 +42,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    BarcodeScanner
   ]
 })
 export class AppModule {}
