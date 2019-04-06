@@ -12,12 +12,18 @@ import { ReceiptPage } from '../receipt/receipt';
 })
 export class LoginPage {
 
-  choice:String = null;
+  choice:string = null;
+  vend:string = null;
+  stud:string = null;
 
   constructor(public navCtrl: NavController) {
   }
   
   navigateToNextPage(): void {
+
+    localStorage.setItem("StudentNum", this.stud);
+    localStorage.setItem("VendorNum", this.vend);
+
     if(this.choice == "Student")
     {
       this.navCtrl.push(StudentPage);

@@ -22,12 +22,9 @@
     Scan QR Code
   </button>
   <div class="spacer" style="width:300px;height:61px;" id="vendor-spacer2"></div>
-  <form id="vendor-form2">
     <ion-item name="Done" id="vendor-checkbox1">
-      <ion-label>
-        Done
+      <ion-label id="vendor-checkbox1inner">
       </ion-label>
-      <ion-checkbox></ion-checkbox>
+      <ion-checkbox [(ngModel)]="check" [ngModelOptions] = "{standalone:true}" color="secondary" disabled="true"></ion-checkbox>
     </ion-item>
-  </form>
 </ion-content>
