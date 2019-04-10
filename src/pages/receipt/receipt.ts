@@ -9,5 +9,5 @@ export class ReceiptPage {
 
   constructor(public navCtrl: NavController) {
   }
-  
+
 }

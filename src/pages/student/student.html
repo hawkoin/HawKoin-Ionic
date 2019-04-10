@@ -10,15 +10,15 @@
     <p id="welcome-heading1"></p>
     Scan to Pay
   </h1>
-  
+
   <!--<div style="width:100%;height:220px;margin:0px 0px;line-height:250px;background-color:#e8ebef;text-align:center;">
     <i class="icon ion-image" style="font-size:64px;color:#888;vertical-align:middle;"></i>
     </div>
   -->
   <ion-item style="text-align:center;">
     <qr-code [value]="studentID" [size]="200"></qr-code>
-    </ion-item>
-  <button id="student-button3" ion-button color="positive" (click) = "toggleBalance()" block>
+  </ion-item>
+  <button id="student-button3" ion-button color="positive" (click)="toggleBalance()" block>
     Show Balance
   </button>
   <h1 id="student-heading2" style="color:#000000;text-align:center;">

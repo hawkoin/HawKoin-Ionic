@@ -1,25 +1,26 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-    Login
+      Login
     </ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding id="page1">
-  <img src="assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" style="display:block;width:auto;height:400px;margin-left:auto;margin-right:auto;" />
-  <button id="login-button1" ion-button color="positive" (click) = "navigateToNextPage()" block>
+  <img src="assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png"
+    style="display:block;width:auto;height:400px;margin-left:auto;margin-right:auto;" />
+  <button id="login-button1" ion-button color="positive" (click)="navigateToNextPage()" block>
     Login
   </button>
 
-  <div class="spacer" style="width:300px;height:1000px;" id="receipt-spacer4"></div>  
- 
+  <div class="spacer" style="width:300px;height:1000px;" id="receipt-spacer4"></div>
+
   <ion-item>
     <ion-label></ion-label>
-    <ion-input [(ngModel)]="stud" [ngModelOptions] = "{standalone:true}" type="text"placeholder="Student"></ion-input>
+    <ion-input [(ngModel)]="stud" [ngModelOptions]="{standalone:true}" type="text" placeholder="Student"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label></ion-label>
-    <ion-input [(ngModel)]="vend" [ngModelOptions] = "{standalone:true}" type="text"placeholder="Vendor"></ion-input>
+    <ion-input [(ngModel)]="vend" [ngModelOptions]="{standalone:true}" type="text" placeholder="Vendor"></ion-input>
   </ion-item>
 
   <form id="login-form5">
@@ -27,7 +28,7 @@
       <ion-label>
         Select
       </ion-label>
-      <ion-select [(ngModel)]="choice" [ngModelOptions] = "{standalone:true}" name="">
+      <ion-select [(ngModel)]="choice" [ngModelOptions]="{standalone:true}" name="">
         <ion-option>Student</ion-option>
         <ion-option>Vendor</ion-option>
         <ion-option>Admin</ion-option>

@@ -27,7 +27,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ReceiptPage
   ],
   imports: [
-    BrowserModule,QRCodeModule, HttpClientModule,
+    BrowserModule, QRCodeModule, HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -42,8 +42,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     BarcodeScanner
   ]
 })
-export class AppModule {}
+export class AppModule { }

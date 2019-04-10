@@ -12,35 +12,30 @@ import { ReceiptPage } from '../receipt/receipt';
 })
 export class LoginPage {
 
-  choice:string = null;
-  vend:string = null;
-  stud:string = null;
+  choice: string = null; //page selection variable
+  vend: string = null; //vendor number variable
+  stud: string = null; //student number variable
 
   constructor(public navCtrl: NavController) {
   }
-  
-  navigateToNextPage(): void {
 
-    localStorage.setItem("StudentNum", this.stud);
-    localStorage.setItem("VendorNum", this.vend);
+  navigateToNextPage(): void { //called when login button is pressed
 
-    if(this.choice == "Student")
-    {
-      this.navCtrl.push(StudentPage);
+    localStorage.setItem("StudentNum", this.stud); //stores student number in local storage
+    localStorage.setItem("VendorNum", this.vend); //stores vendor number in local storage
+
+    if (this.choice == "Student") {
+      this.navCtrl.push(StudentPage); //navigates to student 
     }
-    else if(this.choice == "Vendor")
-    {
-      this.navCtrl.push(VendorPage);
+    else if (this.choice == "Vendor") {
+      this.navCtrl.push(VendorPage); //naviagtes to vendor
     }
-    else if(this.choice == "Admin")
-    {
-      this.navCtrl.push(AdminPage);
+    else if (this.choice == "Admin") {
+      this.navCtrl.push(AdminPage); //navigates to admin
     }
-    else if(this.choice == "Receipt")
-    {
-      this.navCtrl.push(ReceiptPage);
+    else if (this.choice == "Receipt") {
+      this.navCtrl.push(ReceiptPage); //navigates to receipt
     }
-    //this.navCtrl.push(VendorPage);
   }
 
 }
