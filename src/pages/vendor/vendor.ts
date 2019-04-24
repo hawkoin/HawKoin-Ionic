@@ -24,7 +24,7 @@ export class VendorPage {
 
   scanCode() { //called when to scan code
 
-    if (this.amount) //checks if value was entered for amount
+    if (this.amount > 0) //checks if value was entered for amount
     {
       this.barcodeScanner.scan().then(barcodeData => { //launches barcode scanner
         this.scannedCode = barcodeData.text; //stores scanned code
@@ -54,7 +54,7 @@ export class VendorPage {
 
     }
     else {
-      window.alert("Please enter a value for amount."); //displays an alert when amount is not entered
+      window.alert("Please enter a positive value for amount."); //displays an alert when amount is not entered
     }
 
   }
