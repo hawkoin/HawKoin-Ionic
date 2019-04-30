@@ -13,13 +13,27 @@ export class StudentPage {
   studentID = localStorage.getItem("StudentNum"); //retrieves student number from local storage
   balance = null; //variable to store balance
   name: String = ""; //variable to store name
+  //url is the server + student num used for htp requests
+  url: string = 'http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID;
 
   constructor(public navCtrl: NavController, private http: HttpClient) {
-    this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      var parsedJ = JSON.parse(JSON.stringify(response));
+    //this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+      var parsedJ = JSON.parse(JSON.stringify(this.httpRequest(this.http, this.url)));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
-    });
+    //});
 
+  }
+
+  /**
+   * New method to abstract the http get request form the constructor
+   * @param http 
+   * @param url 
+   */
+  httpRequest(http: HttpClient, url: string): any {
+    //private http = new HttpClient(); 
+    this.http.get(url).subscribe((response) => {
+      return response;
+    }
   }
 
   toggleBalance(): void { //called when balance is to be toggled
