@@ -14,7 +14,21 @@
   </button> 
 -->
 <div text-center>
-  <google-l></google-l>
+  <div *ngIf = "(user | async) || {} as user">
+
+    <button ion-button
+    *ngIf = "!user.uid"
+    (tap) = "googleLogin()">
+    Login with Google OAuth
+    </button>
+  
+    <div *ngIf = "user.uid">
+      You're already logged in with UID {{ user.uid }}
+      <button ion-button (tap) = "signOut()">
+        Logout
+      </button>
+    </div>
+  </div>
 </div>
 
 
