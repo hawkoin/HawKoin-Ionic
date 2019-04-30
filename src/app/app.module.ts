@@ -8,14 +8,24 @@ import { VendorPage } from '../pages/vendor/vendor';
 import { AdminPage } from '../pages/admin/admin';
 import { ReceiptPage } from '../pages/receipt/receipt';
 
+
 import { QRCodeModule } from 'angular2-qrcode';
 import { HttpClientModule } from '@angular/common/http';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner'
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+import { GooglePlus } from '@ionic-native/google-plus';
+
+const firebaseConfig = {
+    //see firebase config doc on team drive
+}
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { GoogleLComponent } from '../components/google-l/google-l';
 
 @NgModule({
   declarations: [
@@ -24,11 +34,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StudentPage,
     VendorPage,
     AdminPage,
-    ReceiptPage
+    ReceiptPage, GoogleLComponent
   ],
   imports: [
     BrowserModule, QRCodeModule, HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(firebaseConfig), // <-- firebase here
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -43,7 +55,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    BarcodeScanner
+    BarcodeScanner, GooglePlus
   ]
 })
 export class AppModule { }

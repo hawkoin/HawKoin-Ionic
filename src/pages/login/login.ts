@@ -6,11 +6,13 @@ import { VendorPage } from "../vendor/vendor"
 import { AdminPage } from "../admin/admin"
 import { ReceiptPage } from '../receipt/receipt';
 
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
 export class LoginPage {
+
 
   choice: string = null; //page selection variable
   vend: string = null; //vendor number variable
@@ -37,5 +39,7 @@ export class LoginPage {
       this.navCtrl.push(ReceiptPage); //navigates to receipt
     }
   }
+
+ 
 
 }
