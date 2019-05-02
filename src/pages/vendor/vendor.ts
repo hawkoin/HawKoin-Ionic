@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { cloudUrl } from '../../app/app.module';
 
 
 
@@ -30,6 +31,7 @@ export class VendorPage {
       this.barcodeScanner.scan().then(barcodeData => { //launches barcode scanner
         this.scannedCode = barcodeData.text; //stores scanned code
 
+        //splits up data from QR code
         this.fromID = this.scannedCode.split(" ")[0];
         this.authToken= this.scannedCode.split(" ")[1];
 
@@ -47,13 +49,13 @@ export class VendorPage {
           "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
         }; //create payload to send to Fabric
 
-        this.http.post("http://35.188.189.147:3000/api/org.hawkoin.network.TransferFunds", JSON.stringify(this.payload), httpOptions).subscribe(data => {
+        this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
           console.log(data); //log response for testing
           document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
           this.check = true; //checks checkmark
-        }, error => {
-          console.log(error);
-          window.alert("Error: " + error.error.error.message);
+        }, error => { //catches errors
+          console.log(error); //log response for testing
+          window.alert("Error: " + error.error.error.message); //display error in prompt
         });
 
         setTimeout(this.refresh.bind(this), 10000); //sets a timeout for 10 seconds to clear page for next transaction

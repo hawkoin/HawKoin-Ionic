@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 import { HttpClient } from '@angular/common/http';
+import { cloudUrl } from '../../app/app.module';
 
 
 @Component({
@@ -14,12 +15,12 @@ export class StudentPage {
   balance = null; //variable to store balance
   name: String = ""; //variable to store name
   //url is the server + student num used for htp requests
-  url: string = 'http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID;
-  authToken: String = localStorage.getItem("Token");
-  QRData: String = this.studentID + " " + this.authToken;
+  url: string = cloudUrl + 'org.hawkoin.network.student/' + this.studentID;
+  authToken: String = localStorage.getItem("Token"); //retrieves token that was stored in login
+  QRData: String = this.studentID + " " + this.authToken; //data for qr code
 
   constructor(public navCtrl: NavController, private http: HttpClient) {
-    this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+    this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
       var parsedJ = JSON.parse(JSON.stringify(response));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
     });
@@ -44,7 +45,7 @@ export class StudentPage {
 
     if (text.hidden) { //runs if text is currently hidden
 
-      this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
+      this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
         var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
         text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
       });

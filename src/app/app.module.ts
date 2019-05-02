@@ -20,9 +20,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GooglePlus } from '@ionic-native/google-plus';
 
 const firebaseConfig = {
-  //see firebaseConfig doc on team drive 
-
+  //see firebase doc on team drive
 }
+
+export const cloudUrl:string = 'http://35.188.189.147:3000/api/';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
