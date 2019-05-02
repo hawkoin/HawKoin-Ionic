@@ -15,6 +15,8 @@ export class StudentPage {
   name: String = ""; //variable to store name
   //url is the server + student num used for htp requests
   url: string = 'http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID;
+  authToken: String = localStorage.getItem("Token");
+  QRData: String = this.studentID + " " + this.authToken;
 
   constructor(public navCtrl: NavController, private http: HttpClient) {
     //this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
@@ -33,7 +35,7 @@ export class StudentPage {
     //private http = new HttpClient(); 
     this.http.get(url).subscribe((response) => {
       return response;
-    }
+    });
   }
 
   toggleBalance(): void { //called when balance is to be toggled

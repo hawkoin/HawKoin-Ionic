@@ -23,9 +23,12 @@
     </button>
   
     <div *ngIf = "user.uid">
-      You're already logged in with UID {{ user.uid }}
+      You're already logged in!
       <button ion-button (tap) = "signOut()">
         Logout
+      </button>
+      <button ion-button id="login-button1" (tap) = "googleLogin()">
+        Continue
       </button>
     </div>
   </div>

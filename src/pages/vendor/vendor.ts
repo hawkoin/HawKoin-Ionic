@@ -13,9 +13,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class VendorPage {
   check: Boolean = false; //variable for checkboz
   amount: number = null; //variable to store amount to transfer
-  scannedCode = null; //variable to store scanned QR Code
+  scannedCode: String = null; //variable to store scanned QR Code
+  fromID = null;
   vendorID = localStorage.getItem("VendorNum"); //retrieves vendor num from local storage
-  authToken: String = "noToken"; //variable to store authToken
+  authToken: String = null; //variable to store authToken
   payload = null; //varirable to store payload on server
 
   constructor(public navCtrl: NavController, private barcodeScanner: BarcodeScanner, private http: HttpClient) {
@@ -29,6 +30,9 @@ export class VendorPage {
       this.barcodeScanner.scan().then(barcodeData => { //launches barcode scanner
         this.scannedCode = barcodeData.text; //stores scanned code
 
+        this.fromID = this.scannedCode.split(" ")[0];
+        this.authToken= this.scannedCode.split(" ")[1];
+
         const httpOptions = { //constant for http headers
           headers: new HttpHeaders({
             'Content-Type': 'application/json'
@@ -39,13 +43,13 @@ export class VendorPage {
           "$class": "org.hawkoin.network.TransferFunds",
           "amount": this.amount,
           "authToken": this.authToken,
-          "fromUser": ('resource:org.hawkoin.network.Student#' + this.scannedCode),
+          "fromUser": ('resource:org.hawkoin.network.Student#' + this.fromID),
           "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
         }; //create payload to send to Fabric
 
         this.http.post("http://35.188.189.147:3000/api/org.hawkoin.network.TransferFunds", JSON.stringify(this.payload), httpOptions).subscribe(response => {
           console.log(response); //log response for testing
-          document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " Scanned code: " + this.scannedCode; //displays amount and recipient ids
+          document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
           this.check = true; //checks checkmark
         });
 
