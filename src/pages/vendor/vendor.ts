@@ -47,10 +47,13 @@ export class VendorPage {
           "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
         }; //create payload to send to Fabric
 
-        this.http.post("http://35.188.189.147:3000/api/org.hawkoin.network.TransferFunds", JSON.stringify(this.payload), httpOptions).subscribe(response => {
-          console.log(response); //log response for testing
+        this.http.post("http://35.188.189.147:3000/api/org.hawkoin.network.TransferFunds", JSON.stringify(this.payload), httpOptions).subscribe(data => {
+          console.log(data); //log response for testing
           document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
           this.check = true; //checks checkmark
+        }, error => {
+          console.log(error);
+          window.alert("Error: " + error.error.error.message);
         });
 
         setTimeout(this.refresh.bind(this), 10000); //sets a timeout for 10 seconds to clear page for next transaction

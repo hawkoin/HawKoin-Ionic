@@ -20,7 +20,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GooglePlus } from '@ionic-native/google-plus';
 
 const firebaseConfig = {
-  //see firebase config doc on team drive
+  //see firebaseConfig doc on team drive 
+
 }
 
 import { StatusBar } from '@ionic-native/status-bar';

@@ -43,7 +43,8 @@ export class LoginPage {
     //verify with backend that user is student
     this.http.get("http://35.188.189.147:3000/api/org.hawkoin.network.Student?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22" + this.email +"%22%7D%20%7D"
     ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-     var parsedJ = JSON.parse(JSON.stringify(response));
+      console.log(response);
+      var parsedJ = JSON.parse(JSON.stringify(response));
      if(parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student")
      {
        localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage

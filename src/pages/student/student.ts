@@ -19,10 +19,10 @@ export class StudentPage {
   QRData: String = this.studentID + " " + this.authToken;
 
   constructor(public navCtrl: NavController, private http: HttpClient) {
-    //this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      var parsedJ = JSON.parse(JSON.stringify(this.httpRequest(this.http, this.url)));
+    this.http.get('http://35.188.189.147:3000/api/org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+      var parsedJ = JSON.parse(JSON.stringify(response));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
-    //});
+    });
 
   }
 
