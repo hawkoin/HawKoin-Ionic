@@ -145,7 +145,7 @@ export class LoginPage {
   }
 
   googleLogin() { //login function
-    if (this.platform.is('cordova') && (!this.platform.is('core') && !this.platform.is('mobileweb'))) { //calls native login
+    if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webGoogleLogin();
