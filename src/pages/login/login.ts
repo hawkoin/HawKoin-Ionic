@@ -39,8 +39,8 @@ export class LoginPage {
     this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
       (result) => {
         if (result.user) { //checks if the result's user is valid
-          result.user.email; //stores email
-          result.credential['accessToken']; //stores access token
+          this.email = result.user.email; //stores email
+          this.accessToken = result.credential['accessToken']; //stores access token
           this.navigateToNextPage(); //calls navigate to next page
         }
       }
