@@ -21,7 +21,7 @@ import { GooglePlus } from '@ionic-native/google-plus';
 
 const firebaseConfig = {
   //check firebase config doc
-  
+
 
   }
 

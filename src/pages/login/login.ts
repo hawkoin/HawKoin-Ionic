@@ -53,49 +53,59 @@ export class LoginPage {
 
     //verify with backend that user is student
     this.http.get(cloudUrl + 'org.hawkoin.network.Student?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+    ).subscribe((response) => { 
       var parsedJ = JSON.parse(JSON.stringify(response));
       if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
         localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
         localStorage.setItem("Token", this.accessToken); //stores student token in local storage
         this.navCtrl.push(StudentPage); //navigates to student 
       }
-    });
+      else {
+        //verify with backend that user is faculty
+        this.http.get(cloudUrl + 'org.hawkoin.network.Faculty?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
+        ).subscribe((response) => { 
+          var parsedJ = JSON.parse(JSON.stringify(response));
+          if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
+            localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
+            localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
+            this.navCtrl.push(StudentPage); //navigates to spender 
+          }
+          else {
 
-    //verify with backend that user is faculty
-    this.http.get(cloudUrl + 'org.hawkoin.network.Faculty?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      var parsedJ = JSON.parse(JSON.stringify(response));
-      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
-        localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
-        localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
-        this.navCtrl.push(StudentPage); //navigates to spender 
+            //verify with backend that user is vendor
+            this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
+            ).subscribe((response) => { 
+              var parsedJ = JSON.parse(JSON.stringify(response));
+              if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
+                localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
+                localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
+                this.navCtrl.push(VendorPage); //navigates to vendor 
+              }
+              else {
+                //verify with backend that user is admin
+                this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
+                ).subscribe((response) => { 
+                  var parsedJ = JSON.parse(JSON.stringify(response));
+                  if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
+                    localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
+                    this.navCtrl.push(AdminPage); //navigates to admin 
+                  }
+                  else {
+                    //display login error
+                    window.alert("Error: Your HawKoin account has not been set up. Please contact HawKoin support at dar220@lehigh.edu for assistance.");
+                  }
+                });
+
+
+              }
+            });
+
+
+          }
+        });
+
       }
     });
-
-
-    //verify with backend that user is vendor
-    this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      var parsedJ = JSON.parse(JSON.stringify(response));
-      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
-        localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
-        localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
-        this.navCtrl.push(VendorPage); //navigates to vendor 
-      }
-    });
-
-    //verify with backend that user is admin
-    this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      var parsedJ = JSON.parse(JSON.stringify(response));
-      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
-        localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
-        this.navCtrl.push(AdminPage); //navigates to admin 
-      }
-    });
-
-    window.alert("Error: Your HawKoin account has not been set up. Please contact HawKoin support at dar220@lehigh.edu for assistance.");
 
   }
 
