@@ -13,7 +13,7 @@ import { Platform } from 'ionic-angular';
 import { StudentPage } from "../student/student"
 import { VendorPage } from "../vendor/vendor"
 import { AdminPage } from "../admin/admin"
-import { ReceiptPage } from '../receipt/receipt';
+//import { ReceiptPage } from '../receipt/receipt';
 
 import { HttpClient } from '@angular/common/http';
 import { cloudUrl } from '../../app/app.module';
@@ -25,17 +25,28 @@ import { cloudUrl } from '../../app/app.module';
 export class LoginPage {
 
   user: Observable<firebase.User>; //firebase user
-  accessToken : string = null; //Google acces token string
-  email : string = null; //Google email token string
+  accessToken: string = null; //Google acces token string
+  email: string = null; //Google email token string
 
   choice: string = null; //page selection variable
   vend: string = null; //vendor number variable
   stud: string = null; //student number variable
 
-  constructor(public navCtrl: NavController, private afAuth: AngularFireAuth, 
+  constructor(public navCtrl: NavController, private afAuth: AngularFireAuth,
     private gplus: GooglePlus,
     private platform: Platform, private http: HttpClient) {
-      this.user = this.afAuth.authState; //initialize firbase user
+    this.user = this.afAuth.authState; //initialize firbase user
+    this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
+      (result) => {
+        if (result.user) { //checks if the result's user is valid
+          result.user.email; //stores email
+          result.credential['accessToken']; //stores access token
+          this.navigateToNextPage(); //calls navigate to next page
+        }
+      }
+    ).catch(function (error) {
+      console.log(error); //logs errors
+    });
   }
 
   navigateToNextPage(): void { //called when login button is pressed
@@ -43,79 +54,73 @@ export class LoginPage {
     //verify with backend that user is student
     this.http.get(cloudUrl + 'org.hawkoin.network.Student?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
     ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-      console.log(response);
       var parsedJ = JSON.parse(JSON.stringify(response));
-     if(parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student")
-     {
-       localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
-       localStorage.setItem("Token", this.accessToken); //stores student token in local storage
-       this.navCtrl.push(StudentPage); //navigates to student 
-     }
-  }); 
+      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
+        localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
+        localStorage.setItem("Token", this.accessToken); //stores student token in local storage
+        this.navCtrl.push(StudentPage); //navigates to student 
+      }
+    });
 
     //verify with backend that user is faculty
     this.http.get(cloudUrl + 'org.hawkoin.network.Faculty?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
     ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-     var parsedJ = JSON.parse(JSON.stringify(response));
-     if(parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty")
-     {
-       localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
-       localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
-       this.navCtrl.push(StudentPage); //navigates to spender 
-     }
-  }); 
+      var parsedJ = JSON.parse(JSON.stringify(response));
+      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
+        localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
+        localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
+        this.navCtrl.push(StudentPage); //navigates to spender 
+      }
+    });
 
- 
- //verify with backend that user is vendor
- this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
- ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-  var parsedJ = JSON.parse(JSON.stringify(response));
-  console.log("RESSSSSPONE" + response);
-  if(parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor")
-  {
-    localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
-    localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
-    this.navCtrl.push(VendorPage); //navigates to vendor 
-  }
-}); 
 
- //verify with backend that user is admin
- this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
- ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
-  var parsedJ = JSON.parse(JSON.stringify(response));
-  if(parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator")
-  {
-    localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
-    this.navCtrl.push(AdminPage); //navigates to admin 
-  }
-}); 
+    //verify with backend that user is vendor
+    this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
+    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+      var parsedJ = JSON.parse(JSON.stringify(response));
+      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
+        localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
+        localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
+        this.navCtrl.push(VendorPage); //navigates to vendor 
+      }
+    });
 
-  window.alert("Error: Your HawKoin account has not been set up. Please contact HawKoin support at dar220@lehigh.edu for assistance.");
+    //verify with backend that user is admin
+    this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
+    ).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+      var parsedJ = JSON.parse(JSON.stringify(response));
+      if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
+        localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
+        this.navCtrl.push(AdminPage); //navigates to admin 
+      }
+    });
+
+    window.alert("Error: Your HawKoin account has not been set up. Please contact HawKoin support at dar220@lehigh.edu for assistance.");
 
   }
 
   async nativeGoogleLogin(): Promise<firebase.User> { //native cordova login
     try {
-  
+
       const gplusUser = await this.gplus.login({
         'webClientId': '450929965097-n1j7pbt94akt631v9bqdbf65qf2lk45a.apps.googleusercontent.com',
         'offline': true,
         'scopes': 'profile email'
       }); //signs in with native popup
-  
+
       const credential = await this.afAuth.auth.signInWithCredential(
         firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
-        ); //signs in with credentials provided
+      ); //signs in with credentials provided
 
-        //stores credential information
-        this.accessToken = gplusUser.accessToken;
-        this.email = credential.email;
+      //stores credential information
+      this.accessToken = gplusUser.accessToken;
+      this.email = credential.email;
 
-        this.navigateToNextPage(); //calls navigate to next page
+      this.navigateToNextPage(); //calls navigate to next page
 
-        return credential; //returns credential to calling function
+      return credential; //returns credential to calling function
 
-    } catch(err) {
+    } catch (err) {
       console.log(err); //log error
     }
   }
@@ -124,31 +129,32 @@ export class LoginPage {
     try {
 
       const provider = new firebase.auth.GoogleAuthProvider(); //set up Google as a login provider
+      /* //Old sign in method with popup. This does not work correctly on mobile browsers.
       const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
       
       //stores credential information
       this.accessToken = credential.credential['accessToken'];
       this.email = credential.additionalUserInfo.profile['email'];
+      */
+      await this.afAuth.auth.signInWithRedirect(provider); //signs in using a redirect
 
-      this.navigateToNextPage(); //calls navigate to next page
-
-    } catch(err) {
+    } catch (err) {
       console.log(err); //log error
     }
-  
+
   }
 
   googleLogin() { //login function
-    if (this.platform.is('cordova') && !this.platform.is('core')) { //calls native login
-      this.nativeGoogleLogin(); 
+    if (this.platform.is('cordova') && (!this.platform.is('core') && !this.platform.is('mobileweb'))) { //calls native login
+      this.nativeGoogleLogin();
     } else {  //calls web login
       this.webGoogleLogin();
     }
   }
 
-  
+
   signOut() { //sign out function
-    this.afAuth.auth.signOut().then(() => {window.location.assign('https://accounts.google.com/Logout');}); //signs out of app and then google account
+    this.afAuth.auth.signOut().then(() => { window.location.assign('https://accounts.google.com/Logout'); }); //signs out of app and then google account
   }
 
 
