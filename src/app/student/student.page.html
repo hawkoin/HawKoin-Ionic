@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-nav-pop slot="start">
+      <ion-button>Back</ion-button>
+    </ion-nav-pop>
+  
+    <ion-title>
+      Spender
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" id="page2">
+  <h1 id="student-heading1" class="ion-text-center">
+    <p id="welcome-heading1"></p>
+    Scan to Pay
+  </h1>
+
+  <!--<div style="width:100%;height:220px;margin:0px 0px;line-height:250px;background-color:#e8ebef;text-align:center;">
+    <i class="icon ion-image" style="font-size:64px;color:#888;vertical-align:middle;"></i>
+    </div>
+  -->
+  <div class="ion-text-center">
+  <ion-item >
+    <qr-code [value]="QRData" [size]="200"></qr-code>
+  </ion-item>
+  <ion-button id="student-button3" ion-button (click)="toggleBalance()" block>
+    Show Balance
+  </ion-button>
+  <div>
+  <h1 id="student-heading2" style="color:#000000;text-align:center;">
+  </h1>
+</ion-content>
