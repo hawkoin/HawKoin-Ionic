@@ -51,8 +51,9 @@ export class VendorPage {
 
         this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
           console.log(data); //log response for testing
-          document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
-          this.check = true; //checks checkmark
+          window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.authToken); //display success in prompt
+          //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
+          //this.check = true; //checks checkmark
         }, error => { //catches errors
           console.log(error); //log response for testing
           window.alert("Error: " + error.error.error.message); //display error in prompt
