@@ -2,6 +2,7 @@
 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular'
 
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -32,7 +33,7 @@ export class LoginPage {
   vend: string = null; //vendor number variable
   stud: string = null; //student number variable
 
-  constructor(private router: Router, private afAuth: AngularFireAuth,
+  constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl:NavController,
     private gplus: GooglePlus,
     private platform: Platform, private http: HttpClient) {
     this.user = this.afAuth.authState; //initialize firbase user
@@ -58,7 +59,7 @@ export class LoginPage {
       if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
         localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
         localStorage.setItem("Token", this.accessToken); //stores student token in local storage
-        this.router.navigate(['/student']); //navigates to student 
+        this.navCtrl.navigateForward(['/student']); //navigates to student 
       }
       else {
         //verify with backend that user is faculty
@@ -68,7 +69,7 @@ export class LoginPage {
           if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
             localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
             localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
-            this.router.navigate(['/student']); //navigates to spender 
+            this.navCtrl.navigateForward(['/student']); //navigates to spender 
           }
           else {
 
@@ -79,7 +80,7 @@ export class LoginPage {
               if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
                 localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
                 localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
-                this.router.navigate(['/vendor']); //navigates to vendor 
+                this.navCtrl.navigateForward(['/vendor']); //navigates to vendor 
               }
               else {
                 //verify with backend that user is admin
@@ -88,7 +89,7 @@ export class LoginPage {
                   var parsedJ = JSON.parse(JSON.stringify(response));
                   if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
                     localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
-                    this.router.navigate(['/admin']); //navigates to admin 
+                    this.navCtrl.navigateForward(['/admin']); //navigates to admin 
                   }
                   else {
                     //display login error
@@ -138,6 +139,25 @@ export class LoginPage {
   async webGoogleLogin(): Promise<void> {
     try {
 
+      const provider = new firebase.auth.GoogleAuthProvider().setCustomParameters({prompt: 'select_account'}); //set up Google as a login provider
+      /* //Old sign in method with popup. This does not work correctly on mobile browsers.
+      const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
+      
+      //stores credential information
+      this.accessToken = credential.credential['accessToken'];
+      this.email = credential.additionalUserInfo.profile['email'];
+      */
+      await this.afAuth.auth.signInWithRedirect(provider); //signs in using a redirect
+
+    } catch (err) {
+      console.log(err); //log error
+    }
+
+  }
+
+  async webCheck(): Promise<void> {
+    try {
+
       const provider = new firebase.auth.GoogleAuthProvider(); //set up Google as a login provider
       /* //Old sign in method with popup. This does not work correctly on mobile browsers.
       const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
@@ -154,6 +174,14 @@ export class LoginPage {
 
   }
 
+  nextPage() {
+    if (this.platform.is('cordova')) { //calls native login
+      this.nativeGoogleLogin();
+    } else {  //calls web login
+      this.webCheck();
+    }
+  }
+
   googleLogin() { //login function
     if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
@@ -164,7 +192,12 @@ export class LoginPage {
 
 
   signOut() { //sign out function
-    this.afAuth.auth.signOut().then(() => { window.location.assign('https://accounts.google.com/Logout'); }); //signs out of app and then google account
+    this.afAuth.auth.signOut().then(() => { 
+      if (this.platform.is('cordova')) { //calls native login
+      this.gplus.logout();
+    }
+      
+     }); //signs out of app and then google account
   }
 
 

@@ -1,5 +1,9 @@
 <ion-header>
   <ion-toolbar>
+    <ion-nav-pop slot="start">
+      <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
+    </ion-nav-pop>
+  
     <ion-title>
       Vendor
     </ion-title>
@@ -18,7 +22,7 @@
     </ion-item>
   </form>
   <div  class="spacer" style="width:300px;height:120px;" id="vendor-spacer1"></div>
-  <ion-button id="vendor-button4" (click)="scanCode()" block>
+  <ion-button id="vendor-button4" (click)="scanCode()" block expand="block">
     Scan QR Code
   </ion-button>
   <div class="spacer" style="width:300px;height:61px;" id="vendor-spacer2"></div>
