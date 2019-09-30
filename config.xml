@@ -104,6 +104,10 @@
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.450929965097-4tonmpmve7fisk008o285qan9h79nnlc" />
         <variable name="WEB_APPLICATION_CLIENT_ID" value="450929965097-n1j7pbt94akt631v9bqdbf65qf2lk45a.apps.googleusercontent.com" />
     </plugin>
+<<<<<<< HEAD
     <engine name="ios" spec="latest" />
     <engine name="android" spec="latest" />
+=======
+    <engine name="ios" spec="5.0.1" />
+>>>>>>> 2343106a971d1d72fac075b9f1615abdaf080726
 </widget>
