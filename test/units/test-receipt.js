@@ -1,21 +1,14 @@
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
-//const student = require('../../src/pages/student.ts')
+//const student = require('../../src/pages/receipt.ts')
 
-describe('student', function () {
+//*****Receipt doesnt have any code yet */
+describe('receipt', function () {
 
   describe('constructor', function () {
       it('should have default NavController', function () {
 
       })
-  })
-
-  describe('httpRequest', function () {
-
-  })
-
-  describe('toggleBalance', function () {
-    
   })
 
   it('should show initial display correctly', () => {
