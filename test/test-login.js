@@ -5,13 +5,13 @@ import {HawKoin} from './app.component';
 
 import {login} from '../src/app/login';
 
-const {describe, it} = require('mocha')
-const {expect} = require('chai')
-//const login = require('../../src/pages/login.ts')
+//const {describe, it} = require('mocha')
+//const {expect} = require('chai')
+//const loginPageConst = require('../src/app/login/login.page.ts')
 
 describe('login', function () {
   
-let login = new LoginPage();
+//let login = new LoginPage();
 
   describe('constructor', function () {
 
