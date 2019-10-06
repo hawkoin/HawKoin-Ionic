@@ -1,5 +1,6 @@
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
+<<<<<<< HEAD
 //const student = require('../../src/pages/vendor.ts')
 
 describe('vendor', function () {
@@ -38,4 +39,22 @@ describe('vendor', function () {
     })
   })
 
+=======
+//const student = require('../../src/pages/student.ts')
+
+describe('vendor', function () {
+
+  describe('constructor', function () {
+      it('Sample description', function () {
+
+      })
+  })
+/**
+  it('should show initial display correctly', () => {
+    //expect(calculator.initialState.display).to.equal('0')
+  })
+  it('should replace 0 in initialState', () => {
+    //expect(stream('4').display).to.equal('4')
+  }) */
+>>>>>>> 6dce7b5a1d494f92ddd6534073320da9081d6643
 })
