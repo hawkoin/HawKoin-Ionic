@@ -49,12 +49,6 @@ export class StudentPage {
     var buttonText = document.getElementById("student-button3"); //get htnl id for burron
 
     if (text.hidden) { //runs if text is currently hidden
-
-      this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
-        var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
-        text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
-      });
-
       text.hidden = false; //unhides the text
       buttonText.textContent = "Hide Balance"; //updates button to hide balance
     } else { //hides the balance
@@ -102,7 +96,7 @@ export class StudentPage {
 
               this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + parsedJ[0].id, JSON.stringify(payload), httpOptions).subscribe(data => {
                     console.log(data); //log response for testing
-                    window.alert("Success!"); //display success in prompt
+                    window.alert("Confirmed/Cancelled!"); //display success in prompt
                     //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
                     //this.check = true; //checks checkmark
                     this.isRunning = false;
@@ -114,6 +108,12 @@ export class StudentPage {
         
         }
         
+      });
+
+      var text = document.getElementById("student-heading2"); //gets html id for label
+      this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
+        var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
+        text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
       });
       
     

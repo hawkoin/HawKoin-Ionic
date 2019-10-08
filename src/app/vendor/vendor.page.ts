@@ -46,7 +46,7 @@ export class VendorPage {
           })
         };
 
-        //this.presentLoading();
+        this.presentLoading();
         this.InProgressID = this.generateUUID();
 
         //post the InProgressAsset
@@ -62,7 +62,7 @@ export class VendorPage {
 
             this.http.post(cloudUrl + 'org.hawkoin.network.InProgress', JSON.stringify(this.payload), httpOptions).subscribe(data => {
                     console.log(data); //log response for testing
-                    window.alert("Success posting!"); //display success in prompt
+                    //window.alert("Success posting!"); //display success in prompt
                     
                   }, error => { //catches errors
                     console.log(error); //log response for testing
@@ -124,7 +124,7 @@ async presentLoading() {
           })
         };
 
-      this.http.get(cloudUrl + 'org.hawkoin.network.InProgress?filter=%7B%22where%22%20%3A%20%7B%22status%22%20%3A%20%22CONFIRMED%22%2C%20%22id%22%20%3A%20%22'+ this.InProgressID + '%22%7D%7D').subscribe((response) => { //reguests list from Fabric        var parsedJ = JSON.parse(JSON.stringify(response));
+      this.http.get(cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%3A%7B%22id%22%3A%22'+ this.InProgressID + '%22%7D%7D').subscribe((response) => { //reguests list from Fabric        var parsedJ = JSON.parse(JSON.stringify(response));
         var parsedJ = JSON.parse(JSON.stringify(response));
         if(!this.isRunning && parsedJ[0] && parsedJ[0].status == "CONFIRMED")
         { 
@@ -140,7 +140,7 @@ async presentLoading() {
 
               this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
                 console.log(data); //log response for testing
-                //this.loading.dismiss();
+                this.loading.dismiss();
                 window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.authToken); //display success in prompt
                 //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
                 //this.check = true; //checks checkmark
@@ -163,7 +163,7 @@ async presentLoading() {
                 this.refresh();
               }, error => { //catches errors
                 console.log(error); //log response for testing
-                //this.loading.dismiss();
+                this.loading.dismiss();
                 window.alert("Error: " + error.error.error.message); //display error in prompt
                 this.payload = {
                     "$class": "org.hawkoin.network.InProgress",
@@ -183,7 +183,14 @@ async presentLoading() {
                 this.refresh();
               });
             }
-            else {
+            else if(!this.isRunning && parsedJ[0] && parsedJ[0].status == "CANCELLED")
+            {
+              this.isRunning = true; 
+              this.loading.dismiss();
+              window.alert("Transaction cancelled by student");
+            }
+            else 
+            {
               setTimeout(this.refreshData.bind(this), 1000); //sets a timeout to refresh the list eery 2 seconds
             }
         
