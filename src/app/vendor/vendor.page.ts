@@ -23,7 +23,7 @@ export class VendorPage {
   payload = null; //varirable to store payload on server
   loading = null;
   InProgressID = null;
-  isRunning = false;
+  isRunning: Boolean = false;
 
   constructor(public navCtrl: NavController, private barcodeScanner: BarcodeScanner, private http: HttpClient, public loadingCtrl: LoadingController) {
 
@@ -70,6 +70,7 @@ export class VendorPage {
                     return;
                   });
 
+        this.isRunning = false;
         this.refreshData();
 
       })
@@ -128,71 +129,73 @@ async presentLoading() {
         var parsedJ = JSON.parse(JSON.stringify(response));
         if(!this.isRunning && parsedJ[0] && parsedJ[0].status == "CONFIRMED")
         { 
-          this.isRunning = true; 
-        
-              this.payload = {
-                "$class": "org.hawkoin.network.TransferFunds",
-                "amount": this.amount,
-                "authToken": this.authToken,
-                "fromUser": ('resource:org.hawkoin.network.Student#' + this.fromID),
-                "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
-              }; //create payload to send to Fabric
+            //window.alert("true1");
+            this.isRunning = true; 
+            this.payload = {
+              "$class": "org.hawkoin.network.TransferFunds",
+              "amount": this.amount,
+              "authToken": this.authToken,
+              "fromUser": ('resource:org.hawkoin.network.Student#' + this.fromID),
+              "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
+            }; //create payload to send to Fabric
 
-              this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
-                console.log(data); //log response for testing
-                this.loading.dismiss();
-                window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.authToken); //display success in prompt
-                //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
-                //this.check = true; //checks checkmark
-                 this.payload = {
-                    "$class": "org.hawkoin.network.InProgress",
-                    "amount": parsedJ[0].amount,
-                    "status" : "COMPLETED",
-                    "authToken": parsedJ[0].authToken,
-                    "fromUser": parsedJ[0].fromUser,
-                    "toUser": parsedJ[0].toUser
-                  }; //create payload to send to Fabric
-
-                  this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
-                    console.log(data); //log response for testing
-                  }, error => { //catches errors
-                    console.log(error); //log response for testing
-                  });
-
-
-                this.refresh();
-              }, error => { //catches errors
-                console.log(error); //log response for testing
-                this.loading.dismiss();
-                window.alert("Error: " + error.error.error.message); //display error in prompt
-                this.payload = {
-                    "$class": "org.hawkoin.network.InProgress",
-                    "amount": parsedJ[0].amount,
-                    "status" : "FAILED",
-                    "authToken": parsedJ[0].authToken,
-                    "fromUser": parsedJ[0].fromUser,
-                    "toUser": parsedJ[0].toUser
-                  }; //create payload to send to Fabric
-
-                  this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
-                    console.log(data); //log response for testing
-                  }, error => { //catches errors
-                    console.log(error); //log response for testing
-                  });
-
-                this.refresh();
-              });
-            }
-            else if(!this.isRunning && parsedJ[0] && parsedJ[0].status == "CANCELLED")
-            {
-              this.isRunning = true; 
+            this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
+              console.log(data); //log response for testing
               this.loading.dismiss();
-              window.alert("Transaction cancelled by student");
-            }
-            else 
-            {
-              setTimeout(this.refreshData.bind(this), 1000); //sets a timeout to refresh the list eery 2 seconds
-            }
+              window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.authToken); //display success in prompt
+              //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
+              //this.check = true; //checks checkmark
+               this.payload = {
+                  "$class": "org.hawkoin.network.InProgress",
+                  "amount": parsedJ[0].amount,
+                  "status" : "COMPLETED",
+                  "authToken": parsedJ[0].authToken,
+                  "fromUser": parsedJ[0].fromUser,
+                  "toUser": parsedJ[0].toUser
+                }; //create payload to send to Fabric
+
+                this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
+                  console.log(data); //log response for testing
+                }, error => { //catches errors
+                  console.log(error); //log response for testing
+                });
+
+
+              this.refresh();
+            }, error => { //catches errors
+              console.log(error); //log response for testing
+              this.loading.dismiss();
+              window.alert("Error: " + error.error.error.message); //display error in prompt
+              this.payload = {
+                  "$class": "org.hawkoin.network.InProgress",
+                  "amount": parsedJ[0].amount,
+                  "status" : "FAILED",
+                  "authToken": parsedJ[0].authToken,
+                  "fromUser": parsedJ[0].fromUser,
+                  "toUser": parsedJ[0].toUser
+                }; //create payload to send to Fabric
+
+                this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
+                  console.log(data); //log response for testing
+                }, error => { //catches errors
+                  console.log(error); //log response for testing
+                });
+
+              this.refresh();
+            });
+          }
+          else if(!this.isRunning && parsedJ[0] && parsedJ[0].status == "CANCELLED")
+          {
+            //window.alert("true2");
+            this.isRunning = true; 
+            this.loading.dismiss();
+            window.alert("Transaction cancelled by student");
+            this.refresh();
+          }
+          else 
+          {
+            setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
+          }
         
       });
 
