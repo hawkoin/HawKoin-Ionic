@@ -13,12 +13,11 @@
   <h1 id="admin-heading2" style="color:#000000;">
     Transactions
   </h1>
-  <ion-list  id="admin-list1" aproxItemHeight="40px">
-    <ion-item *virtualItem="let item">
-      <h4>{{item.name}}</h4>
-    </ion-item>
-
-  </ion-list>
+  <ion-virtual-scroll [items]="items">
+  <ion-item *virtualItem="let item">
+    {{ item.name }}
+  </ion-item>
+</ion-virtual-scroll>
 
 
 </ion-content>

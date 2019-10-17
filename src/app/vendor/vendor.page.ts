@@ -108,7 +108,8 @@ export class VendorPage {
 
 async presentLoading() {
     this.loading = await this.loadingCtrl.create({
-      message: 'Waiting for Confimation'
+      message: 'Waiting for Confimation',
+      spinner: 'crescent'
     });
     await this.loading.present();
 

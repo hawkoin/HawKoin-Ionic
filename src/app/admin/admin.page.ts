@@ -28,7 +28,7 @@ export class AdminPage {
       }
     });
 
-    setTimeout(this.refreshData.bind(this), 2000); //sets a timeout to refresh the list eery 2 seconds
+    setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
   }
 
 }

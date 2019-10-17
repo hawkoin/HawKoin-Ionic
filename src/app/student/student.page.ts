@@ -23,6 +23,7 @@ export class StudentPage {
 
 
   constructor(public navCtrl: NavController, private http: HttpClient) {
+
     this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => { //gets student name from Fabric and displays it upon page load
       var parsedJ = JSON.parse(JSON.stringify(response));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
@@ -59,10 +60,11 @@ export class StudentPage {
 
   refreshData(): void //method to refresh transaction list
   {
-  
-      this.http.get(cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.studentID + '%22%7D%7D').subscribe((response) => { //reguests list from Fabric
+     if(!this.isRunning)
+     {
+       this.http.get(cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.studentID + '%22%7D%7D').subscribe((response) => { //reguests list from Fabric
         var parsedJ = JSON.parse(JSON.stringify(response));
-        if(!this.isRunning && parsedJ[0])
+        if(!this.isRunning && parsedJ[0] && parsedJ[0].status == 'WAITING')
         { 
           this.isRunning = true;
         var payload;
@@ -109,7 +111,7 @@ export class StudentPage {
         }
         
       });
-
+     }
       var text = document.getElementById("student-heading2"); //gets html id for label
       this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
         var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
@@ -118,10 +120,17 @@ export class StudentPage {
           text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
           text.hidden = true;
         }
+        else
+        {
+                    text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
+
+        }
       });
       
-    
-    setTimeout(this.refreshData.bind(this), 1000); //sets a timeout to refresh the list eery 2 seconds
+
+    setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
+
+
   }
 
 
