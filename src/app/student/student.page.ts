@@ -18,6 +18,7 @@ export class StudentPage {
   //url is the server + student num used for htp requests
   url: string = cloudUrl + 'org.hawkoin.network.student/' + this.studentID;
   authToken: String = localStorage.getItem("Token"); //retrieves token that was stored in login
+  refreshToken: String = localStorage.getItem("refreshToken");
   QRData: String = this.studentID + " " + this.authToken; //data for qr code
   isRunning: boolean = false; 
 
@@ -131,6 +132,12 @@ export class StudentPage {
     setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
 
 
+  }
+
+  refreshQR()
+  {
+        
+        setTimeout(this.refreshData.bind(this), 30000); //sets a timeout to refresh the list eery 2 seconds
   }
 
 

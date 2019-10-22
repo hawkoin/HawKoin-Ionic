@@ -27,6 +27,7 @@ export class LoginPage {
 
   user: Observable<firebase.User>; //firebase user
   accessToken: string = null; //Google acces token string
+  refreshToken: string = null;
   email: string = null; //Google email token string
 
   choice: string = null; //page selection variable
@@ -42,6 +43,7 @@ export class LoginPage {
         if (result.user) { //checks if the result's user is valid
           this.email = result.user.email; //stores email
           this.accessToken = result.credential['accessToken']; //stores access token
+          this.refreshToken = result.credential['refreshToken'];
           this.navigateToNextPage(); //calls navigate to next page
         }
       }
@@ -59,6 +61,7 @@ export class LoginPage {
       if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
         localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
         localStorage.setItem("Token", this.accessToken); //stores student token in local storage
+        localStorage.setItem("refreshToken", this.refreshToken);
         this.navCtrl.navigateForward(['/student']); //navigates to student 
       }
       else {
@@ -69,6 +72,7 @@ export class LoginPage {
           if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
             localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
             localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
+            localStorage.setItem("refreshToken", this.refreshToken);
             this.navCtrl.navigateForward(['/student']); //navigates to spender 
           }
           else {
@@ -80,6 +84,7 @@ export class LoginPage {
               if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
                 localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
                 localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
+                localStorage.setItem("refreshToken", this.refreshToken);
                 this.navCtrl.navigateForward(['/vendor']); //navigates to vendor 
               }
               else {
@@ -89,6 +94,7 @@ export class LoginPage {
                   var parsedJ = JSON.parse(JSON.stringify(response));
                   if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
                     localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
+                    localStorage.setItem("refreshToken", this.refreshToken);
                     this.navCtrl.navigateForward(['/admin']); //navigates to admin 
                   }
                   else {
@@ -112,7 +118,6 @@ export class LoginPage {
 
   async nativeGoogleLogin(): Promise<firebase.User> { //native cordova login
     try {
-
       const gplusUser = await this.gplus.login({
         'webClientId': '450929965097-n1j7pbt94akt631v9bqdbf65qf2lk45a.apps.googleusercontent.com',
         'offline': true,
@@ -125,6 +130,7 @@ export class LoginPage {
 
       //stores credential information
       this.accessToken = gplusUser.accessToken;
+      this.refreshToken = gplusUser.refreshToken;
       this.email = credential.email;
 
       this.navigateToNextPage(); //calls navigate to next page
