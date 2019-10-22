@@ -30,6 +30,7 @@
     "angular2-qrcode": "^2.0.3",
     "angularfire2": "^5.1.2",
     "cordova-android": "8.1.0",
+    "cordova-browser": "6.0.0",
     "cordova-ios": "5.0.1",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-googleplus": "^8.1.1",
@@ -95,7 +96,8 @@
     },
     "platforms": [
       "ios",
-      "android"
+      "android",
+      "browser"
     ]
   }
 }
