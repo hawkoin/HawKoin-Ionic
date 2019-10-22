@@ -115,12 +115,12 @@ export class StudentPage {
       var text = document.getElementById("student-heading2"); //gets html id for label
       this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID).subscribe((response) => {
         var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
-        if(text.hidden)
+        if(text && text.hidden)
         {
           text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
           text.hidden = true;
         }
-        else
+        else if (text)
         {
                     text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
 
