@@ -9,8 +9,8 @@ Distibuted ledger for developing business logic and deploying it into the blockc
 ### Google OAuth
 Protocol for authentication and authorization throughout the HawKoin App. Allows for users to login with their @lehigh.edu addresses and helps generate dynamic QR code.
 
-### Mocha/Chai
-A JavaScript testing framework that allows functions to be tested throughout changes made to HawKoin. Runs accurate reporting to pinpoint issues and limit debugging time.
+### Karma/Jasmine
+A JavaScript testing framework that allows functions to be tested throughout changes made to HawKoin. Runs accurate reporting to pinpoint issues and limit debugging time through the web browser.
 
 
 ### Google AppEngine
@@ -112,6 +112,7 @@ An Admin needs to properly account for transacitons that occur for log purposes.
 2. Transaction's display refreshes and accounts for incoming transactions
 
 ## How to run Tests
+"npm test" and will give you running list of tests and the result of those tests
 
 # Authors
 Year 1: Matt Addessi, Tim LaRowe, and Aaron Rotem
