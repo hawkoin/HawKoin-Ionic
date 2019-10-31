@@ -1,21 +1,22 @@
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
-<<<<<<< HEAD
 //const student = require('../../src/pages/vendor.ts')
 
 describe('vendor', function () {
 
-  it('should construct a vendor correctly', () => {
+  it('should construct a vendor correctly', function ()  {
     //if this needs many tests it should probably be wrapped in a constructor describe
   })
+  describe('DisplayState', function () {
+    it('should have default NavController', function () {
 
-  describe('scan function', function () {
-      it('should reject an amount = 0', function () {
+    })
+    it('Should display vendor content correctly', function () {
 
-      })
-      it('should reject an amount < 0', function () {
+    })
+  })
 
-      })
+  describe('Scan', function () {
       it('should scan a barcode', function () {
         //no idea how to test barcodeScanner.scan()
       })
@@ -25,12 +26,28 @@ describe('vendor', function () {
       it('should construct a correct payload', function () {
 
       })
-      it('should post a transaction', function () {
+  })
+  describe('Transaction', function () {
+    it('should reject an amount = 0', function () {
 
-      })
-      it('should reject a flawed transaction', function () {
+    })
+    it('should reject an amount < 0', function () {
 
-      })
+    })
+    it('should reject a flawed transaction', function () {
+
+    })
+})
+  describe('Confirmation', function () {
+    it('Properly terminates after time has passed', function () {
+
+    })
+    it('Displays success', function () {
+
+    })
+    it('Displays failure', function () {
+
+    })
   })
 
   describe('refresh function', function () {
@@ -39,22 +56,7 @@ describe('vendor', function () {
     })
   })
 
-=======
 //const student = require('../../src/pages/student.ts')
 
-describe('vendor', function () {
 
-  describe('constructor', function () {
-      it('Sample description', function () {
-
-      })
-  })
-/**
-  it('should show initial display correctly', () => {
-    //expect(calculator.initialState.display).to.equal('0')
-  })
-  it('should replace 0 in initialState', () => {
-    //expect(stream('4').display).to.equal('4')
-  }) */
->>>>>>> 6dce7b5a1d494f92ddd6534073320da9081d6643
 })

@@ -4,7 +4,7 @@ const {expect} = require('chai')
 
 describe('student', function () {
 
-  describe('constructor', function () {
+  describe('Display', function () {
       it('should have default NavController', function () {
 
       })
@@ -18,9 +18,7 @@ describe('student', function () {
     it('balance should display correctly', function () {
 
     })
-    it('balance displayed should change after non-zero transaction', function () {
-
-    })
+ 
   })
   describe('Transactions', function () {
     it('negative balance transactions are not allowed',function () {
@@ -40,12 +38,10 @@ describe('student', function () {
     it('Cancel reflects no change to balance', function() {
 
     })
+    it('Confirmation brings to next page', function() {
+
+    })
+    
   })
 
-  it('should show initial display correctly', () => {
-    //expect(calculator.initialState.display).to.equal('0')
-  })
-  it('should replace 0 in initialState', () => {
-    //expect(stream('4').display).to.equal('4')
-  })
 })
