@@ -3,7 +3,7 @@
     <ion-nav-pop slot="start">
       <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
     </ion-nav-pop>
-  
+
     <ion-title>
       Vendor
     </ion-title>
@@ -21,7 +21,7 @@
       <ion-input [(ngModel)]="amount" [ngModelOptions]="{standalone:true}" type="number" placeholder=""></ion-input>
     </ion-item>
   </form>
-  <div  class="spacer" style="width:300px;height:120px;" id="vendor-spacer1"></div>
+  <div class="spacer" style="width:300px;height:120px;" id="vendor-spacer1"></div>
   <ion-button id="vendor-button4" (click)="scanCode()" block expand="block">
     Scan QR Code
   </ion-button>

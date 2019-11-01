@@ -6,42 +6,38 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding id="page1">
- <div class="ion-text-center">
-  <img src="/assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" width="400">
-</div>
- <!-- Old Login:
+  <div class="ion-text-center">
+    <img src="/assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" width="400">
+  </div>
+  <!-- Old Login:
    <ion-button id="login-button1" color="positive" (click)="navigateToNextPage()" block>
     Login
   </ion-button> 
 -->
-<div text-center>
-  <div *ngIf = "(user | async) || {} as user">
+  <div text-center>
+    <div *ngIf="(userState | async) || {} as user">
 
-    <ion-button 
-    *ngIf = "!user.uid"
-    (click) = "googleLogin()">
-    Login with Google OAuth
-    </ion-button>
-  
-    <div  *ngIf = "user.uid">
-      You're already logged in!
-<div padding id="page1">
-        <ion-button id="login-button1" (click)="nextPage()">
-                Continue
-              </ion-button>
-            </div>
-      <div>
-        <ion-button (click)="signOut();">
-                        Logout
-                      </ion-button>
-            </div>
+      <ion-button *ngIf="!user.uid" (click)="googleLogin()">
+        Login with Google OAuth
+      </ion-button>
+
+      <div *ngIf="user.uid">
+        You're already logged in as {{ user.email }}
+        <div padding id="page1">
+          <ion-button id="login-button1" (click)="navigateToNextPage()">
+            Continue
+          </ion-button>
+        </div>
+        <div>
+          <ion-button (click)="signOut();">
+            Logout
+          </ion-button>
+        </div>
       </div>
+    </div>
   </div>
-</div>
-<!--
-
+  <!--
   <div class="spacer" style="width:300px;height:1000px;" id="receipt-spacer4"></div>
-
   <ion-item>
     <ion-label></ion-label>
     <ion-input [(ngModel)]="stud" [ngModelOptions]="{standalone:true}" type="text" placeholder="Student"></ion-input>
@@ -50,7 +46,6 @@
     <ion-label></ion-label>
     <ion-input [(ngModel)]="vend" [ngModelOptions]="{standalone:true}" type="text" placeholder="Vendor"></ion-input>
   </ion-item>
-
   <form id="login-form5">
     <ion-item id="login-select1">
       <ion-label>

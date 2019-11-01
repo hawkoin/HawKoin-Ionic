@@ -9,10 +9,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { GoogleLComponent } from './google-l/google-l.component';
-
 import { QRCodeModule } from 'angular2-qrcode';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
@@ -22,19 +20,26 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const firebaseConfig = {
+  // see firbaseConfig doc
+}
 
-  }
+export const cloudUrl: string = 'http://35.188.189.147:3000/api/';
 
-export const cloudUrl:string = 'http://35.188.189.147:3000/api/';
+export const httpOptions = { //constant for http headers
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json'
+  })
+};
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, QRCodeModule, HttpClientModule, 
-  IonicModule.forRoot(), AppRoutingModule, 
-   AngularFireModule.initializeApp(firebaseConfig), // <-- firebase here
+  imports: [BrowserModule, QRCodeModule, HttpClientModule,
+    IonicModule.forRoot(), AppRoutingModule,
+    AngularFireModule.initializeApp(firebaseConfig), // <-- firebase here
     AngularFireAuthModule
-    ],
+  ],
   providers: [
     StatusBar,
     SplashScreen,
@@ -43,4 +48,4 @@ export const cloudUrl:string = 'http://35.188.189.147:3000/api/';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
