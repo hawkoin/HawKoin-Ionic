@@ -17,6 +17,9 @@ describe('vendor', function () {
   })
 
   describe('Scan', function () {
+    it('Scanner should appear after pressing button', function () {
+      
+    })
       it('should scan a barcode', function () {
         //no idea how to test barcodeScanner.scan()
       })
@@ -42,10 +45,11 @@ describe('vendor', function () {
     it('Properly terminates after time has passed', function () {
 
     })
-    it('Displays success', function () {
+ 
+    it('Displays success after user accepts', function () {
 
     })
-    it('Displays failure', function () {
+    it('Displays failure after user declines', function () {
 
     })
   })
