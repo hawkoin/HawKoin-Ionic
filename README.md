@@ -9,8 +9,8 @@ Distibuted ledger for developing business logic and deploying it into the blockc
 ### Google OAuth
 Protocol for authentication and authorization throughout the HawKoin App. Allows for users to login with their @lehigh.edu addresses and helps generate dynamic QR code.
 
-### Mocha/Chai
-A JavaScript testing framework that allows functions to be tested throughout changes made to HawKoin. Runs accurate reporting to pinpoint issues and limit debugging time.
+### Karma/Jasmine
+A JavaScript testing framework that allows functions to be tested throughout changes made to HawKoin. Runs accurate reporting to pinpoint issues and limit debugging time through the web browser.
 
 
 ### Google AppEngine
@@ -72,13 +72,50 @@ Although still in very early stage development, Admins are those within Lehigh t
 
 ### How to use
 ### Screens
+The admin portal should display data for each transaction that occurs throughout the application. This should constantly refresh and monitor any changes to the blockcahin.
 
 # Testing
-
+We are currnetly using Jasmine's Unit Testing suite in order to ensure that HawKoin persists through changes, version updates, and refactoring. 
 ## Test purposes
+### Spender
+It is crucial that the student is able to perform transactions and that his financial status remains correct. Some of the tests we plan to implement
+
+1. Showing that displays are correct
+2. Negative balance transactions 
+3. Integrity of account balances
+4. Navigation to different screens/states are correct
+5. Dynamic QR Code properly displays and is scannable
+6. Balance properly displays
+
+
+### Vendor
+As the Vendor is another important user of HawKoin, it needs to also maintain integrity throughout changes, version updates, and refactoring. We plan to implement: 
+
+1. Showing displays are correct
+2. Negative balance transactions
+3. Navigation to different screens/states are correct
+4. QR Code correctly Scans for given user
+5. Vendor's inputted balance is reflected to Spender
+
+
+### Receipt
+After a Spender requests using his QR code and the vendor scans, there should be proper confirmation by the Spender for the transaciton. This is crucial for the security of a Spender's account balance. We plan to implement:
+
+1. QR Code being scanned engages confirmation
+2. Timeout occurs 
+3. Proper displays upon confirmation
+
+### Admin
+An Admin needs to properly account for transacitons that occur for log purposes. We plan to implement
+
+1. Transaction is displayed
+2. Transaction's display refreshes and accounts for incoming transactions
 
 ## How to run Tests
+"npm test" and will give you running list of tests and the result of those tests
 
 # Authors
-
+Year 1: Matt Addessi, Tim LaRowe, and Aaron Rotem
+Year 2: Dominic Rubino, Nicholas Stefanidis, and Trent Sawicki
 # Acknowledgements
+A big thank you  to Sharon Kalafut, Jeff Anthony, and Hank Korth. Your guidance, support, and technical expertise has been crucial to the outcome and delivery of this project. HawKoin would not be where it is at without you guys.

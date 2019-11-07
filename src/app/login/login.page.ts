@@ -17,7 +17,7 @@ import { AdminPage } from "../admin/admin.page"
 //import { ReceiptPage } from '../receipt/receipt';
 
 import { HttpClient } from '@angular/common/http';
-import { cloudUrl } from '../app.module';
+import { cloudUrl, httpOptions } from '../app.module';
 
 @Component({
   selector: 'page-login',
@@ -34,7 +34,7 @@ export class LoginPage {
   vend: string = null; //vendor number variable
   stud: string = null; //student number variable
 
-  constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl:NavController,
+  constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
     private platform: Platform, private http: HttpClient) {
     this.user = this.afAuth.authState; //initialize firbase user
@@ -55,8 +55,8 @@ export class LoginPage {
   navigateToNextPage(): void { //called when login button is pressed
 
     //verify with backend that user is student
-    this.http.get(cloudUrl + 'org.hawkoin.network.Student?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-    ).subscribe((response) => { 
+    this.http.get(cloudUrl + 'org.hawkoin.network.Student?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D', httpOptions
+    ).subscribe((response) => {
       var parsedJ = JSON.parse(JSON.stringify(response));
       if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
         localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
@@ -66,8 +66,8 @@ export class LoginPage {
       }
       else {
         //verify with backend that user is faculty
-        this.http.get(cloudUrl + 'org.hawkoin.network.Faculty?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-        ).subscribe((response) => { 
+        this.http.get(cloudUrl + 'org.hawkoin.network.Faculty?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D', httpOptions
+        ).subscribe((response) => {
           var parsedJ = JSON.parse(JSON.stringify(response));
           if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
             localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
@@ -78,8 +78,8 @@ export class LoginPage {
           else {
 
             //verify with backend that user is vendor
-            this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-            ).subscribe((response) => { 
+            this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D', httpOptions
+            ).subscribe((response) => {
               var parsedJ = JSON.parse(JSON.stringify(response));
               if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
                 localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
@@ -89,8 +89,8 @@ export class LoginPage {
               }
               else {
                 //verify with backend that user is admin
-                this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D'
-                ).subscribe((response) => { 
+                this.http.get(cloudUrl + 'org.hawkoin.network.Administrator?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D', httpOptions
+                ).subscribe((response) => {
                   var parsedJ = JSON.parse(JSON.stringify(response));
                   if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
                     localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
@@ -145,7 +145,7 @@ export class LoginPage {
   async webGoogleLogin(): Promise<void> {
     try {
 
-      const provider = new firebase.auth.GoogleAuthProvider().setCustomParameters({prompt: 'select_account'}); //set up Google as a login provider
+      const provider = new firebase.auth.GoogleAuthProvider().setCustomParameters({ prompt: 'select_account' }); //set up Google as a login provider
       /* //Old sign in method with popup. This does not work correctly on mobile browsers.
       const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
       
@@ -198,12 +198,12 @@ export class LoginPage {
 
 
   signOut() { //sign out function
-    this.afAuth.auth.signOut().then(() => { 
+    this.afAuth.auth.signOut().then(() => {
       if (this.platform.is('cordova')) { //calls native login
-      this.gplus.logout();
-    }
-      
-     }); //signs out of app and then google account
+        this.gplus.logout();
+      }
+
+    }); //signs out of app and then google account
   }
 
 

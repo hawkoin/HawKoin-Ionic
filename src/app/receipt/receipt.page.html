@@ -3,33 +3,16 @@
     <ion-nav-pop slot="start">
       <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
     </ion-nav-pop>
-  
+
     <ion-title>
-      Receipt
+      Transaction History
     </ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content padding id="page5">
-  <ion-list id="receipt-list2">
-    <ion-item color="none" id="receipt-list-item7">
-      Chips: $1.20
+  <ion-virtual-scroll [items]="items">
+    <ion-item *virtualItem="let item">
+      {{ item.name }}
     </ion-item>
-    <ion-item color="none" id="receipt-list-item8">
-      Soda: $1.00
-    </ion-item>
-    <ion-item color="none" id="receipt-list-item9">
-      Total: $2.20
-    </ion-item>
-  </ion-list>
-  <div class="spacer" style="width:300px;height:64px;" id="receipt-spacer3"></div>
-  <div class="ion-text-center">
-  <ion-button id="receipt-button5"                  block>
-    Confirm
-  </ion-button>
-
-  <div class="spacer" style="width:300px;height:85px;" id="receipt-spacer4"></div>
-  <ion-button id="receipt-button6"                  block>
-    Save to Photos
-  </ion-button>
-  </div>
+  </ion-virtual-scroll>
 </ion-content>
