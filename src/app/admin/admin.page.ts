@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 
 import { HttpClient } from '@angular/common/http';
-import { cloudUrl } from '../app.module'
+import { cloudUrl, httpOptions } from '../app.module'
 
 @Component({
   selector: 'page-admin',
@@ -17,7 +17,7 @@ export class AdminPage {
 
   refreshData(): void //method to refresh transaction list
   {
-    this.http.get(cloudUrl + 'org.hawkoin.network.TransferFunds').subscribe((response) => { //reguests list from Fabric
+    this.http.get(cloudUrl + 'org.hawkoin.network.TransferFunds', httpOptions).subscribe((response) => { //reguests list from Fabric
 
       this.items = []; //clear out current list
 
