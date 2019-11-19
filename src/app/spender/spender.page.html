@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-nav-pop slot="start">
+      <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
+    </ion-nav-pop>
+
+    <ion-title>
+      Spender
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" id="page2">
+  <h1 id="spender-heading1" class="ion-text-center">
+    <p id="welcome-heading1"></p>
+    Scan to Pay
+  </h1>
+
+
+  <div class="ion-text-center">
+    <qr-code [value]="QRData" [size]="200"></qr-code>
+  </div>
+  <div class="ion-text-center">
+    <ion-button id="spender-button3" ion-button (click)="toggleBalance()" block>
+      Show Balance
+    </ion-button>
+  </div>
+  <h1 hidden="true" id="spender-heading2" style="color:#000000;text-align:center;"></h1>
+  <p></p>
+  <ion-button (click)="this.navCtrl.navigateForward(['/history']);" expand="block">View Transactions</ion-button>
+
+</ion-content>

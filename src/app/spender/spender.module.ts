@@ -7,12 +7,12 @@ import { QRCodeModule } from 'angular2-qrcode';
 
 import { IonicModule } from '@ionic/angular';
 
-import { StudentPage } from './student.page';
+import { SpenderPage } from './spender.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: StudentPage
+    component: SpenderPage
   }
 ];
 
@@ -24,6 +24,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     QRCodeModule
   ],
-  declarations: [StudentPage]
+  declarations: [SpenderPage]
 })
-export class StudentPageModule { }
+export class SpenderPageModule { }

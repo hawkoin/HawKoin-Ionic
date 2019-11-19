@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, AlertController } from '@ionic/angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { cloudUrl, httpOptions } from '../app.module';
 
 import { LoadingController } from '@ionic/angular';
@@ -119,7 +119,7 @@ export class VendorPage {
     });
     await this.loading.present();
 
-    const { role, data } = await this.loading.onDidDismiss();
+    await this.loading.onDidDismiss();
 
     console.log('Loading dismissed!');
   }
@@ -192,8 +192,8 @@ export class VendorPage {
         //window.alert("true2");
         this.isRunning = true;
         this.loading.dismiss();
-        this.showAlert("Error", "Transaction cancelled by student");
-        //window.alert("Transaction cancelled by student");
+        this.showAlert("Error", "Transaction cancelled by spender");
+        //window.alert("Transaction cancelled by spender");
         this.clearPage();
       }
       else {

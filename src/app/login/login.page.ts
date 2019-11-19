@@ -1,7 +1,6 @@
-//source: https://angularfirebase.com/lessons/ionic-google-login-with-firebase-and-angularfire/
+//login code source: https://angularfirebase.com/lessons/ionic-google-login-with-firebase-and-angularfire/
 
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular'
 
 import * as firebase from 'firebase/app';
@@ -12,11 +11,6 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
-import { StudentPage } from "../student/student.page"
-import { VendorPage } from "../vendor/vendor.page"
-import { AdminPage } from "../admin/admin.page"
-//import { ReceiptPage } from '../receipt/receipt';
 
 import { HttpClient } from '@angular/common/http';
 import { cloudUrl, httpOptions } from '../app.module';
@@ -30,10 +24,6 @@ export class LoginPage {
   user: Observable<firebase.User>; //firebase user
   accessToken: string = null; //Google acces token string
   email: string = null; //Google email token string
-
-  choice: string = null; //page selection variable
-  vend: string = null; //vendor number variable
-  stud: string = null; //student number variable
 
   constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
@@ -62,7 +52,7 @@ export class LoginPage {
         localStorage.setItem("IDNum", parsedJ[0].id); //stores student number in local storage
         localStorage.setItem("ClassType", parsedJ[0].$class);
         localStorage.setItem("Token", this.accessToken); //stores student token in local storage
-        this.navCtrl.navigateForward(['/student']); //navigates to student 
+        this.navCtrl.navigateForward(['/spender']); //navigates to spender 
       }
       else {
         //verify with backend that user is faculty
@@ -73,7 +63,7 @@ export class LoginPage {
             localStorage.setItem("IDNum", parsedJ[0].id); //stores faculty number in local storage
             localStorage.setItem("ClassType", parsedJ[0].$class);
             localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
-            this.navCtrl.navigateForward(['/student']); //navigates to spender 
+            this.navCtrl.navigateForward(['/spender']); //navigates to spender 
           }
           else {
 
@@ -207,19 +197,16 @@ export class LoginPage {
     }); //signs out of app and then google account
   }
 
-  showGuide()
-  {
-    if(this.platform.is('cordova'))
-    {
+  showGuide() {
+    if (this.platform.is('cordova')) {
       const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
       //const browser = this.iab.create('/assets/guide.pdf', '_blank');
       browser.show();
     }
-    else
-    {
+    else {
       window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
     }
-    
+
   }
 
 

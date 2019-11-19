@@ -5,8 +5,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule) },
   { path: 'admin', loadChildren: './admin/admin.module#AdminPageModule' },
-  { path: 'receipt', loadChildren: './receipt/receipt.module#ReceiptPageModule' },
-  { path: 'student', loadChildren: './student/student.module#StudentPageModule' },
+  { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
+  { path: 'spender', loadChildren: './spender/spender.module#SpenderPageModule' },
   { path: 'vendor', loadChildren: './vendor/vendor.module#VendorPageModule' },
 
 ];
