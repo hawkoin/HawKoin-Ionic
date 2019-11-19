@@ -62,4 +62,17 @@
   --ion-color-light-contrast: #000000;
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
-  --ion-color-light-tint: #f5f6f9; }
+  --ion-color-light-tint: #f5f6f9;   
+  }
+
+/* CSS for spender confirmation dialog */
+  .buttonCss {
+    button.alert-button.cancel-button{
+      color: red;
+    }
+
+    button.alert-button.confirm-button{
+      color: green;
+      font-size: 20px;
+    }
+}

@@ -17,11 +17,13 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const firebaseConfig = {
   // see firbaseConfig doc
-
+  
 }
 
 export const cloudUrl: string = 'http://35.188.189.147:3000/api/';
@@ -46,7 +48,7 @@ export const httpOptions = { //constant for http headers
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    BarcodeScanner, GooglePlus
+    BarcodeScanner, GooglePlus, InAppBrowser
   ],
   bootstrap: [AppComponent]
 })

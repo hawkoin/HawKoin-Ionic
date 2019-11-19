@@ -17,7 +17,7 @@ export class VendorPage {
   check: Boolean = false; //variable for checkboz
   amount: number = null; //variable to store amount to transfer
   fromID = null;
-  vendorID = localStorage.getItem("VendorNum"); //retrieves vendor num from local storage
+  vendorID = localStorage.getItem("IDNum"); //retrieves vendor num from local storage
   fromAuthToken: String = null; //variable to store fromAuthToken
   payload = null; //varirable to store payload on server
   loading = null;
@@ -140,7 +140,8 @@ export class VendorPage {
         this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
           console.log(data); //log response for testing
           this.loading.dismiss();
-          this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.fromAuthToken);
+          this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID);
+          //this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.fromAuthToken);
           // window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.fromAuthToken); //display success in prompt
           //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
           //this.check = true; //checks checkmark

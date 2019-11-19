@@ -13,7 +13,7 @@ import { LoginPage } from '../login/login.page';
 })
 export class StudentPage {
 
-  studentID = localStorage.getItem("StudentNum"); //retrieves student number from local storage
+  studentID = localStorage.getItem("IDNum"); //retrieves student number from local storage
   balance = null; //variable to store balance
   name: String = ""; //variable to store name
   //url is the server + student num used for htp requests
@@ -21,6 +21,7 @@ export class StudentPage {
   authToken: String; //retrieves token that was stored in login
   QRData: String; //data for qr code
   isRunning: boolean = false;
+  reloadCounter: number = 0;
 
 
   constructor(public navCtrl: NavController, private http: HttpClient, private atrCtrl: AlertController) {
@@ -111,10 +112,12 @@ export class StudentPage {
     let alertConfirm = await this.atrCtrl.create({
       header: 'Confirm Transaction',
       message: 'Amount: ' + response.amount + "\nVendor: " + response.toUser,
+      cssClass:'buttonCss',
       buttons: [
         {
           text: 'Deny',
           role: 'cancel',
+          cssClass: 'cancel-button',
           handler: () => {
             payload = {
               "$class": "org.hawkoin.network.InProgress",
@@ -127,7 +130,7 @@ export class StudentPage {
             this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => {
               console.log(data); //log response for testing
               //window.alert("Confirmed/Cancelled!"); //display success in prompt
-              this.showAlert("Success!", "Confirmed/Cancelled!");
+              this.showAlert("Success!", "Cancelled!");
               //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
               //this.check = true; //checks checkmark
               this.isRunning = false;
@@ -141,6 +144,7 @@ export class StudentPage {
         },
         {
           text: 'Confirm',
+          cssClass: 'confirm-button',
           handler: () => {
             payload = {
               "$class": "org.hawkoin.network.InProgress",
@@ -153,7 +157,7 @@ export class StudentPage {
             this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => {
               console.log(data); //log response for testing
               //window.alert("Confirmed/Cancelled!"); //display success in prompt
-              this.showAlert("Success!", "Confirmed/Cancelled!");
+              this.showAlert("Success!", "Confirmed!");
               //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
               //this.check = true; //checks checkmark
               this.isRunning = false;
@@ -169,11 +173,19 @@ export class StudentPage {
     });
     await alertConfirm.present();
 
-
-
-
-
   }
+/*
+  reloadQR()
+  {
+
+    if(this.reloadCounter == 30)
+    {
+      window.alert("refresh the code!!!")
+      this.reloadCounter = 0;
+    }
+    this.reloadCounter++;
+    setTimeout(this.refreshData.bind(this), 1000); //sets a timeout to refresh the list eery 2 seconds
+  }*/
 
 
 }

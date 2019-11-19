@@ -11,11 +11,19 @@ import { cloudUrl, httpOptions } from '../app.module'
 export class ReceiptPage {
 
   items: Array<any>; //array to store each transaction
-  studentID: String = localStorage.getItem("StudentNum"); //retrieves student number from local storage
+  request:string;
   constructor(public navCtrl: NavController, private http: HttpClient) {
+  
 
-
-    this.http.get(cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.studentID + '%22%7D%7D', httpOptions).subscribe((response) => { //reguests list from Fabric
+if(localStorage.getItem("ClassType") == "org.hawkoin.network.Student")
+{
+  this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22fromUser%22%20%3A%20%22resource%3A'+ localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
+}
+else
+{
+    this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22toUser%22%20%3A%20%22resource%3A'+ localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
+}
+    this.http.get(this.request, httpOptions).subscribe((response) => { //reguests list from Fabric
 
       this.items = []; //clear out current list
 

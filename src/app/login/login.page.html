@@ -7,7 +7,7 @@
 </ion-header>
 <ion-content padding id="page1">
   <div class="ion-text-center">
-    <img src="/assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" width="400">
+    <img src="/assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" width="400" />
   </div>
   <!-- Old Login:
      <ion-button id="login-button1" color="positive" (click)="navigateToNextPage()" block>
@@ -16,26 +16,31 @@
   -->
   <div text-center>
     <div *ngIf="(user | async) || {} as user">
-
       <ion-button *ngIf="!user.uid" (click)="googleLogin()">
         Login with Google OAuth
       </ion-button>
+    <div padding></div>
 
       <div *ngIf="user.uid">
-        You're already logged in as {{user.email}}
+        You're already logged in as {{ user.email }}
         <div padding id="page1">
           <ion-button id="login-button1" (click)="nextPage()">
             Continue
           </ion-button>
         </div>
         <div>
-          <ion-button (click)="signOut();">
+          <ion-button (click)="signOut()">
             Logout
           </ion-button>
         </div>
       </div>
     </div>
+    <div padding></div>
+    <div padding></div>
+    <ion-button (click)="showGuide()">Help</ion-button>
+
   </div>
+
   <!--
     <div class="spacer" style="width:300px;height:1000px;" id="receipt-spacer4"></div>
     <ion-item>

@@ -11,6 +11,8 @@ import { Observable } from 'rxjs/Observable';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 import { StudentPage } from "../student/student.page"
 import { VendorPage } from "../vendor/vendor.page"
 import { AdminPage } from "../admin/admin.page"
@@ -35,7 +37,7 @@ export class LoginPage {
 
   constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
-    private platform: Platform, private http: HttpClient) {
+    private platform: Platform, private http: HttpClient, private iab: InAppBrowser) {
     this.user = this.afAuth.authState; //initialize firbase user
     this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
       (result) => {
@@ -57,7 +59,8 @@ export class LoginPage {
     ).subscribe((response) => {
       var parsedJ = JSON.parse(JSON.stringify(response));
       if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Student") {
-        localStorage.setItem("StudentNum", parsedJ[0].id); //stores student number in local storage
+        localStorage.setItem("IDNum", parsedJ[0].id); //stores student number in local storage
+        localStorage.setItem("ClassType", parsedJ[0].$class);
         localStorage.setItem("Token", this.accessToken); //stores student token in local storage
         this.navCtrl.navigateForward(['/student']); //navigates to student 
       }
@@ -67,7 +70,8 @@ export class LoginPage {
         ).subscribe((response) => {
           var parsedJ = JSON.parse(JSON.stringify(response));
           if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Faculty") {
-            localStorage.setItem("StudentNum", parsedJ[0].id); //stores faculty number in local storage
+            localStorage.setItem("IDNum", parsedJ[0].id); //stores faculty number in local storage
+            localStorage.setItem("ClassType", parsedJ[0].$class);
             localStorage.setItem("Token", this.accessToken); //stores faculty token in local storage
             this.navCtrl.navigateForward(['/student']); //navigates to spender 
           }
@@ -78,7 +82,8 @@ export class LoginPage {
             ).subscribe((response) => {
               var parsedJ = JSON.parse(JSON.stringify(response));
               if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Vendor") {
-                localStorage.setItem("VendorNum", parsedJ[0].id); //stores vendor number in local storage
+                localStorage.setItem("IDNum", parsedJ[0].id); //stores vendor number in local storage
+                localStorage.setItem("ClassType", parsedJ[0].$class);
                 localStorage.setItem("Token", this.accessToken); //stores vendor token in local storage
                 this.navCtrl.navigateForward(['/vendor']); //navigates to vendor 
               }
@@ -88,6 +93,8 @@ export class LoginPage {
                 ).subscribe((response) => {
                   var parsedJ = JSON.parse(JSON.stringify(response));
                   if (parsedJ.length && parsedJ[0].$class == "org.hawkoin.network.Administrator") {
+                    localStorage.setItem("IDNum", parsedJ[0].id); //stores vendor number in local storage
+                    localStorage.setItem("ClassType", parsedJ[0].$class);
                     localStorage.setItem("Token", this.accessToken); //stores admin token in local storage
                     this.navCtrl.navigateForward(['/admin']); //navigates to admin 
                   }
@@ -198,6 +205,21 @@ export class LoginPage {
       }
 
     }); //signs out of app and then google account
+  }
+
+  showGuide()
+  {
+    if(this.platform.is('cordova'))
+    {
+      const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
+      //const browser = this.iab.create('/assets/guide.pdf', '_blank');
+      browser.show();
+    }
+    else
+    {
+      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
+    }
+    
   }
 
 
