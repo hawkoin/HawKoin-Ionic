@@ -17,6 +17,7 @@ export class VendorPage {
   check: Boolean = false; //variable for checkboz
   amount: number = null; //variable to store amount to transfer
   fromID = null;
+  fromClass = null;
   vendorID = localStorage.getItem("IDNum"); //retrieves vendor num from local storage
   fromAuthToken: String = null; //variable to store fromAuthToken
   payload = null; //varirable to store payload on server
@@ -51,8 +52,9 @@ export class VendorPage {
 
   processBarcode(scannedCode: String) {
     //splits up data from QR code
-    this.fromID = scannedCode.split(" ")[0];
-    this.fromAuthToken = scannedCode.split(" ")[1];
+    this.fromClass = scannedCode.split(" ")[0];
+    this.fromID = scannedCode.split(" ")[1];
+    this.fromAuthToken = scannedCode.split(" ")[2];
 
 
     this.presentLoading();
@@ -65,7 +67,7 @@ export class VendorPage {
       "amount": this.amount,
       "status": "WAITING",
       "authToken": this.fromAuthToken,
-      "fromUser": ('resource:org.hawkoin.network.Student#' + this.fromID),
+      "fromUser": (this.fromClass + '#' + this.fromID),
       "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
     }; //create payload to send to Fabric
 
@@ -78,6 +80,7 @@ export class VendorPage {
 
     }, error => { //catches errors
       console.log(error); //log response for testing
+      this.loading.dismiss();
       this.showAlert("Error", error.error.error.message);
       //window.alert("Error: " + error.error.error.message); //display error in prompt
       return;
@@ -133,7 +136,7 @@ export class VendorPage {
           "$class": "org.hawkoin.network.TransferFunds",
           "amount": this.amount,
           "authToken": this.fromAuthToken,
-          "fromUser": ('resource:org.hawkoin.network.Student#' + this.fromID),
+          "fromUser": (this.fromClass + '#' + this.fromID),
           "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
         }; //create payload to send to Fabric
 

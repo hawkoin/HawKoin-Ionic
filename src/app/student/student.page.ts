@@ -16,8 +16,9 @@ export class StudentPage {
   studentID = localStorage.getItem("IDNum"); //retrieves student number from local storage
   balance = null; //variable to store balance
   name: String = ""; //variable to store name
+  classType: String = localStorage.getItem("ClassType");
   //url is the server + student num used for htp requests
-  url: string = cloudUrl + 'org.hawkoin.network.student/' + this.studentID;
+  url: string = cloudUrl + this.classType +'/' + this.studentID;
   authToken: String; //retrieves token that was stored in login
   QRData: String; //data for qr code
   isRunning: boolean = false;
@@ -28,10 +29,10 @@ export class StudentPage {
 
 
     this.authToken = localStorage.getItem("Token");
-    this.QRData = this.studentID + " " + this.authToken;
+    this.QRData = this.classType + " " + this.studentID + " " + this.authToken;
 
 
-    this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID, httpOptions).subscribe((response) => { //gets student name from Fabric and displays it upon page load
+    this.http.get(this.url, httpOptions).subscribe((response) => { //gets student name from Fabric and displays it upon page load
       var parsedJ = JSON.parse(JSON.stringify(response));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
     });
@@ -68,7 +69,16 @@ export class StudentPage {
   refreshData(): void //method to refresh transaction list
   {
     if (!this.isRunning) {
-      this.http.get(cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.studentID + '%22%7D%7D', httpOptions).subscribe((response) => { //reguests list from Fabric
+      var filter = "";
+      if(this.classType == "org.hawkoin.network.Student")
+      {
+        filter = cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.studentID + '%22%7D%7D';
+      }
+      else
+      {
+        filter =cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Faculty%23' + this.studentID + '%22%7D%7D';
+      }
+      this.http.get(filter, httpOptions).subscribe((response) => { //reguests list from Fabric
         var parsedJ = JSON.parse(JSON.stringify(response));
         if (!this.isRunning && parsedJ[0] && parsedJ[0].status == 'WAITING') {
           this.isRunning = true;
@@ -78,7 +88,7 @@ export class StudentPage {
       });
     }
     var text = document.getElementById("student-heading2"); //gets html id for label
-    this.http.get(cloudUrl + 'org.hawkoin.network.student/' + this.studentID, httpOptions).subscribe((response) => {
+    this.http.get(this.url, httpOptions).subscribe((response) => {
       var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
       if (text && text.hidden) {
         text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
