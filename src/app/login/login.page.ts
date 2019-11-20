@@ -172,7 +172,7 @@ export class LoginPage {
   }
 
   nextPage() {
-    if (this.platform.is('cordova')) { //calls native login
+    if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webCheck();
@@ -180,7 +180,7 @@ export class LoginPage {
   }
 
   googleLogin() { //login function
-    if (this.platform.is('cordova')) { //calls native login
+    if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webGoogleLogin();
@@ -190,7 +190,7 @@ export class LoginPage {
 
   signOut() { //sign out function
     this.afAuth.auth.signOut().then(() => {
-      if (this.platform.is('cordova')) { //calls native login
+      if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
         this.gplus.logout();
       }
 
@@ -198,7 +198,7 @@ export class LoginPage {
   }
 
   showGuide() {
-    if (this.platform.is('cordova')) {
+   if (this.platform.is('cordova')) {
       const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
       //const browser = this.iab.create('/assets/guide.pdf', '_blank');
       browser.show();
@@ -206,7 +206,6 @@ export class LoginPage {
     else {
       window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
     }
-
   }
 
 
