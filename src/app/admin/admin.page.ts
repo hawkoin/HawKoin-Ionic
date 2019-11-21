@@ -23,12 +23,17 @@ export class AdminPage {
 
       for (let i = 0; response[i]; i++) { //loops through transactions until end is reached
         this.items.push({ //adds transaction to list 
-          name: "Transaction #" + response[i].transactionId + " From User: " + response[i].fromUser + " To User: " + response[i].toUser + " Amount: " + response[i].amount
+          transaction: "Transaction # " + response[i].transactionId,
+          vendor: "From User: " + response[i].fromUser,
+          spender: "To User: " + response[i].toUser, 
+          amount: "Amount: " + response[i].amount,
+          date: "Date: " + response[i].timestamp
         });
       }
     });
 
     setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
   }
+
 
 }

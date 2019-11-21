@@ -29,7 +29,11 @@ export class HistoryPage {
         console.log(i);
 
         this.items.push({ //adds transaction to list 
-          name: "Transaction #" + response[i].transactionId + " From User: " + response[i].fromUser + " To User: " + response[i].toUser + " Amount: " + response[i].amount
+          transaction: "Transaction # " + response[i].transactionId,
+          vendor: "From User: " + response[i].fromUser,
+          spender: "To User: " + response[i].toUser, 
+          amount: "Amount: " + response[i].amount,
+          date: "Date: " + response[i].timestamp
         });
       }
 
