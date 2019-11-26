@@ -20,6 +20,7 @@ export class SpenderPage {
   QRData: String; //data for qr code
   isRunning: boolean = false;
   reloadCounter: number = 0;
+  refreshTimer: any;
 
 
   constructor(public navCtrl: NavController, private http: HttpClient, private atrCtrl: AlertController) {
@@ -95,8 +96,7 @@ export class SpenderPage {
       }
     });
 
-
-    setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
+   this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
 
 
   }
@@ -179,5 +179,10 @@ export class SpenderPage {
     await alertConfirm.present();
 
   }
+
+  ionViewWillLeave() {
+        console.log("leaving page");
+      clearTimeout(this.refreshTimer);
+    }
 
 }

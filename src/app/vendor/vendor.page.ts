@@ -24,6 +24,7 @@ export class VendorPage {
   loading = null;
   InProgressID = null;
   isRunning: Boolean = false;
+  refreshTimer:any;
 
   constructor(public navCtrl: NavController, private barcodeScanner: BarcodeScanner, private http: HttpClient, public loadingCtrl: LoadingController, private atrCtrl: AlertController) {
 
@@ -93,6 +94,7 @@ export class VendorPage {
     this.amount = null; //clears amount
     document.getElementById("vendor-checkbox1inner").innerHTML = ""; //clears checkbox
     this.check = false; //uncheck checkmark
+    clearTimeout(this.refreshTimer);
   }
 
   //Source: https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -197,7 +199,7 @@ export class VendorPage {
         this.clearPage();
       }
       else {
-        setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
+        this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
       }
 
     });
@@ -214,6 +216,11 @@ export class VendorPage {
     });
     alert.present();
   }
+
+  ionViewWillLeave() {
+        console.log("leaving page");
+      clearTimeout(this.refreshTimer);
+    }
 
 
 }

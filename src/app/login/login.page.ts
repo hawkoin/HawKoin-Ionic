@@ -40,6 +40,7 @@ export class LoginPage {
     ).catch(function (error) {
       console.log(error); //logs errors
     });
+
   }
 
   navigateToNextPage(): void { //called when login button is pressed
@@ -198,14 +199,16 @@ export class LoginPage {
   }
 
   showGuide() {
-   if (this.platform.is('cordova')) {
+   if(this.platform.is('mobileweb') || !this.platform.is('cordova'))
+   {
+      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
+   }
+   else {
       const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
       //const browser = this.iab.create('/assets/guide.pdf', '_blank');
       browser.show();
     }
-    else {
-      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
-    }
+    
   }
 
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from '@ionic/angular';
 
 import { HttpClient } from '@angular/common/http';
@@ -10,8 +10,9 @@ import { cloudUrl, httpOptions } from '../app.module'
 })
 export class AdminPage {
   items: any[] = []; //array to store each transaction
+  refreshTimer:any;
 
-  constructor(public navCtrl: NavController, private http: HttpClient) {
+  constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
     this.refreshData(); //call refreshData() when page loads
   }
 
@@ -31,9 +32,14 @@ export class AdminPage {
         });
       }
     });
+    this.ref.detectChanges();
 
-    setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
+    this.refreshTimer = setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
   }
 
+      ionViewWillLeave() {
+        console.log("leaving page");
+      clearTimeout(this.refreshTimer);
+    }
 
 }

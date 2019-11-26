@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController } from '@ionic/angular';
 
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ export class HistoryPage {
 
   items: Array<any>; //array to store each transaction
   request: string;
-  constructor(public navCtrl: NavController, private http: HttpClient) {
+  constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
 
 
     if (localStorage.getItem("ClassType") == "org.hawkoin.network.Student") {
@@ -24,7 +24,6 @@ export class HistoryPage {
     this.http.get(this.request, httpOptions).subscribe((response) => { //reguests list from Fabric
 
       this.items = []; //clear out current list
-
       for (let i = 0; response[i]; i++) { //loops through transactions until end is reached
         console.log(i);
 
@@ -36,8 +35,10 @@ export class HistoryPage {
           date: "Date: " + response[i].timestamp
         });
       }
+      ref.detectChanges();
 
     });
 
   }
+
 }
