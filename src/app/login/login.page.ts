@@ -24,10 +24,16 @@ export class LoginPage {
   user: Observable<firebase.User>; //firebase user
   accessToken: string = null; //Google acces token string
   email: string = null; //Google email token string
+  isWeb: boolean;
 
   constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
     private platform: Platform, private http: HttpClient, private iab: InAppBrowser) {
+
+//this determines if the app is actually running in the browser 
+//NOTE: platform.is("cordova") is insufficient as cordova apps running in a mobile browser will act as if they are running as native apps. This causes issues for the google login plugin
+       this.isWeb = !(document.URL.indexOf("http://localhost") == 0 || document.URL.indexOf("https://localhost") == 0 || document.URL.indexOf("ionic") == 0 && !platform.is("cordova"));
+
     this.user = this.afAuth.authState; //initialize firbase user
     this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
       (result) => {
@@ -172,8 +178,8 @@ export class LoginPage {
 
   }
 
-  nextPage() {
-    if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
+ nextPage() {
+    if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webCheck();
@@ -181,7 +187,7 @@ export class LoginPage {
   }
 
   googleLogin() { //login function
-    if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
+    if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webGoogleLogin();
@@ -191,25 +197,28 @@ export class LoginPage {
 
   signOut() { //sign out function
     this.afAuth.auth.signOut().then(() => {
-      if (this.platform.is('mobile') && !this.platform.is('mobileweb')) { //calls native login
+      if (this.platform.is('cordova')) { //calls native login
         this.gplus.logout();
       }
 
     }); //signs out of app and then google account
   }
 
-  showGuide() {
-   if(this.platform.is('mobileweb') || !this.platform.is('cordova'))
-   {
-      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
-   }
-   else {
+  showGuide()
+  {
+    if(this.platform.is('cordova'))
+    {
       const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
       //const browser = this.iab.create('/assets/guide.pdf', '_blank');
       browser.show();
     }
+    else
+    {
+      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
+    }
     
   }
+
 
 
 }

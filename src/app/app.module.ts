@@ -25,6 +25,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const firebaseConfig = {
   // see firbaseConfig doc
+
 }
 
 export const cloudUrl: string = 'http://35.188.189.147:3000/api/';

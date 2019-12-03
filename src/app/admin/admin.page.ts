@@ -9,8 +9,9 @@ import { cloudUrl, httpOptions } from '../app.module'
   templateUrl: 'admin.page.html'
 })
 export class AdminPage {
-  items: any[] = []; //array to store each transaction
-  refreshTimer:any;
+
+items: any[] = []; //array to store each transaction
+refreshTimer:any;
 
   constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
     this.refreshData(); //call refreshData() when page loads
@@ -32,14 +33,18 @@ export class AdminPage {
         });
       }
     });
-    this.ref.detectChanges();
+
 
     this.refreshTimer = setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
+        //this.ref.detectChanges();
+
+   
+
   }
 
       ionViewWillLeave() {
         console.log("leaving page");
-      clearTimeout(this.refreshTimer);
+    clearTimeout(this.refreshTimer);
     }
 
 }
