@@ -10,8 +10,6 @@ import { Observable } from 'rxjs/Observable';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
 import { HttpClient } from '@angular/common/http';
 import { cloudUrl, httpOptions } from '../app.module';
 
@@ -24,15 +22,11 @@ export class LoginPage {
   user: Observable<firebase.User>; //firebase user
   accessToken: string = null; //Google acces token string
   email: string = null; //Google email token string
-  isWeb: boolean;
 
   constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
-    private platform: Platform, private http: HttpClient, private iab: InAppBrowser) {
+    private platform: Platform, private http: HttpClient) {
 
-//this determines if the app is actually running in the browser 
-//NOTE: platform.is("cordova") is insufficient as cordova apps running in a mobile browser will act as if they are running as native apps. This causes issues for the google login plugin
-       this.isWeb = !(document.URL.indexOf("http://localhost") == 0 || document.URL.indexOf("https://localhost") == 0 || document.URL.indexOf("ionic") == 0 && !platform.is("cordova"));
 
     this.user = this.afAuth.authState; //initialize firbase user
     this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
@@ -206,16 +200,8 @@ export class LoginPage {
 
   showGuide()
   {
-    if(this.platform.is('cordova'))
-    {
-      const browser = this.iab.create('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
-      //const browser = this.iab.create('/assets/guide.pdf', '_blank');
-      browser.show();
-    }
-    else
-    {
-      window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI');
-    }
+
+    window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
     
   }
 
