@@ -14,7 +14,6 @@ items: any[] = []; //array to store each transaction
 refreshTimer:any;
 
   constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
-    this.refreshData(); //call refreshData() when page loads
   }
 
   refreshData(): void //method to refresh transaction list
@@ -36,7 +35,7 @@ refreshTimer:any;
 
 
     this.refreshTimer = setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
-        //this.ref.detectChanges();
+        this.ref.detectChanges();
 
    
 
@@ -46,5 +45,10 @@ refreshTimer:any;
         console.log("leaving page");
     clearTimeout(this.refreshTimer);
     }
+
+    ionViewWillEnter() {
+    console.log("loaded admin!");
+        this.refreshData();
+  }
 
 }

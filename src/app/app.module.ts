@@ -23,10 +23,12 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const firebaseConfig = {
   // see firbaseConfig doc
+    
+
 
 }
 
-export const cloudUrl: string = 'http://35.188.189.147:3000/api/';
+export const cloudUrl: string = 'https://35.188.189.147.xip.io:3000/api/';
 
 export const httpOptions = { //constant for http headers
   headers: new HttpHeaders({

@@ -15,11 +15,12 @@ export class HistoryPage {
   constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
 
 
-    if (localStorage.getItem("ClassType") == "org.hawkoin.network.Student") {
-      this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22fromUser%22%20%3A%20%22resource%3A' + localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
+    if (localStorage.getItem("ClassType") == "org.hawkoin.network.Vendor") {
+     
+        this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22toUser%22%20%3A%20%22resource%3A' + localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
     }
     else {
-      this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22toUser%22%20%3A%20%22resource%3A' + localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
+       this.request = cloudUrl + 'org.hawkoin.network.TransferFunds?filter=%7B%22where%22%3A%20%7B%22fromUser%22%20%3A%20%22resource%3A' + localStorage.getItem("ClassType") + '%23' + localStorage.getItem("IDNum") + '%22%7D%7D';
     }
     this.http.get(this.request, httpOptions).subscribe((response) => { //reguests list from Fabric
 

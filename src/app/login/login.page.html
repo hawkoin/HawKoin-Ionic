@@ -5,20 +5,20 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content padding id="page1">
+<ion-content class="ion-padding" id="page1">
   <div class="ion-text-center">
     <img src="/assets/img/7uXEQbRXSHq1grgczsHr_HawKoinLogo.png" width="400" />
   </div>
-  <div text-center>
+  <div class="ion-text-center">
     <div *ngIf="(user | async) || {} as user">
       <ion-button *ngIf="!user.uid" (click)="googleLogin()">
         Login with Google OAuth
       </ion-button>
-      <div padding></div>
+      <div class="ion-padding"></div>
 
       <div *ngIf="user.uid">
         You're already logged in as {{ user.email }}
-        <div padding id="page1">
+        <div class="ion-padding" id="page1">
           <ion-button id="login-button1" (click)="nextPage()">
             Continue
           </ion-button>
@@ -30,8 +30,7 @@
         </div>
       </div>
     </div>
-    <div padding></div>
-    <div padding></div>
+    <div class="ion-padding"></div>
     <ion-button (click)="showGuide()">Help</ion-button>
 
   </div>

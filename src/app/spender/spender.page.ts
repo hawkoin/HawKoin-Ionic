@@ -35,7 +35,6 @@ export class SpenderPage {
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
     });
 
-    this.refreshData();
 
   }
 
@@ -178,6 +177,11 @@ export class SpenderPage {
     });
     await alertConfirm.present();
 
+  }
+
+  ionViewWillEnter() {
+    console.log("loaded spender!");
+        this.refreshData();
   }
 
   ionViewWillLeave() {

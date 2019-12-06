@@ -19,5 +19,11 @@ echo
 
 ionic cordova build android
 
+echo
+echo "Building browser project"
+echo
+
+ionic cordova build browser
+
 echo 
 echo "***DONE***"
