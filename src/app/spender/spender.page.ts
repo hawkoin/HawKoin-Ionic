@@ -10,49 +10,35 @@ import { cloudUrl, httpOptions } from '../app.module';
 })
 export class SpenderPage {
 
-  spenderID = localStorage.getItem("IDNum"); //retrieves spender number from local storage
+  spenderID = null; //stores spender ID
   balance = null; //variable to store balance
-  name: String = ""; //variable to store name
-  classType: String = localStorage.getItem("ClassType");
-  //url is the server + spender num used for htp requests
-  url: string = cloudUrl + this.classType + '/' + this.spenderID;
-  authToken: String; //retrieves token that was stored in login
+  name: String = ""; //variable to store spender name
+  classType: String = null; //variable to store type of spender
+  url: string = cloudUrl + this.classType + '/' + this.spenderID; //url is the server + spender type + spender num used for http requests
+  authToken: String; //stores token that was stored during login
   QRData: String; //data for qr code
-  isRunning: boolean = false;
-  reloadCounter: number = 0;
-  refreshTimer: any;
+  isRunning: boolean = false; //boolean to determine is asset check is running or not
+  refreshTimer: any; //variable used to store timer for status refresh
 
 
   constructor(public navCtrl: NavController, private http: HttpClient, private atrCtrl: AlertController) {
 
+    this.authToken = localStorage.getItem("Token"); //retrieves token used during login
+    this.spenderID = localStorage.getItem("IDNum"); //retrieves user id 
+    this.classType = localStorage.getItem("ClassType"); //retrieves type of user
 
-    this.authToken = localStorage.getItem("Token");
-    this.QRData = this.classType + " " + this.spenderID + " " + this.authToken;
-
+    this.QRData = this.classType + " " + this.spenderID + " " + this.authToken; //generates data for QR Code
 
     this.http.get(this.url, httpOptions).subscribe((response) => { //gets spender name from Fabric and displays it upon page load
       var parsedJ = JSON.parse(JSON.stringify(response));
       document.getElementById("welcome-heading1").innerHTML = "Welcome, " + parsedJ.contactInfo.firstName + " " + parsedJ.contactInfo.lastName;
     });
 
-
-  }
-
-  /**
-   * New method to abstract the http get request form the constructor
-   * @param http 
-   * @param url 
-   */
-  httpRequest(http: HttpClient, url: string): any {
-    //private http = new HttpClient(); 
-    this.http.get(url, httpOptions).subscribe((response) => {
-      return response;
-    });
   }
 
   toggleBalance(): void { //called when balance is to be toggled
     var text = document.getElementById("spender-heading2"); //gets html id for label
-    var buttonText = document.getElementById("spender-button3"); //get htnl id for burron
+    var buttonText = document.getElementById("spender-button3"); //get html id for button
 
     if (text.hidden) { //runs if text is currently hidden
       text.hidden = false; //unhides the text
@@ -63,57 +49,59 @@ export class SpenderPage {
     }
   }
 
-  refreshData(): void //method to refresh transaction list
+  refreshData(): void //method to check for any inProgress assets
   {
-    if (!this.isRunning) {
-      var filter = "";
-      if (this.classType == "org.hawkoin.network.Student") {
+    if (!this.isRunning) { //checks if method is already running
+      var filter = ""; //variable for the filter to use
+      if (this.classType == "org.hawkoin.network.Student") { //filter for student spender
         filter = cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Student%23' + this.spenderID + '%22%7D%7D';
       }
-      else {
+      else { //filter for faculty spender
         filter = cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%20%3A%20%7B%22status%22%3A%22WAITING%22%2C%20%22fromUser%22%20%3A%20%22resource%3Aorg.hawkoin.network.Faculty%23' + this.spenderID + '%22%7D%7D';
       }
-      this.http.get(filter, httpOptions).subscribe((response) => { //reguests list from Fabric
-        var parsedJ = JSON.parse(JSON.stringify(response));
-        if (!this.isRunning && parsedJ[0] && parsedJ[0].status == 'WAITING') {
-          this.isRunning = true;
-          this.confirmation(parsedJ[0]);
+
+      this.http.get(filter, httpOptions).subscribe((response) => { //reguests status from fabric
+
+        var parsedJ = JSON.parse(JSON.stringify(response)); //parse response
+        if (!this.isRunning && parsedJ[0] && parsedJ[0].status == 'WAITING') { //displays alert if not running and assest status is waiting 
+          this.isRunning = true; //changes isRunning to true
+          this.confirmation(parsedJ[0]); //called confirmation dialog on response
         }
 
       });
     }
+
     var text = document.getElementById("spender-heading2"); //gets html id for label
-    this.http.get(this.url, httpOptions).subscribe((response) => {
+    this.http.get(this.url, httpOptions).subscribe((response) => { //gets up to date balance value
       var parsedJ = JSON.parse(JSON.stringify(response)); //parses response from fabric
       if (text && text.hidden) {
         text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
-        text.hidden = true;
+        text.hidden = true; //hides text if already hidden
       }
       else if (text) {
         text.innerHTML = "Balance: $" + parsedJ.balance; //writes balance to label
-
       }
     });
 
-   this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
-
+    this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list every 0.5 seconds
 
   }
 
-  async showAlert(title: string, subTitle: string) {
-    let alert = await this.atrCtrl.create({
+  async showAlert(title: string, subTitle: string) { //called to diplay an alert dialog
+
+    let alert = await this.atrCtrl.create({ //creates alert dialog
       header: title,
       subHeader: subTitle,
       buttons: ['OK']
     });
-    alert.present();
+    alert.present(); //presents alert dialog
+
   }
 
-  async confirmation(response: any) {
-    var payload;
+  async confirmation(response: any) { //runs when confirmation is received
+    var payload; //payload to send to Fabric 
 
-
-    let alertConfirm = await this.atrCtrl.create({
+    let alertConfirm = await this.atrCtrl.create({ //creates a confirmation alert window
       header: 'Confirm Transaction',
       message: 'Amount: ' + response.amount + "\nVendor: " + response.toUser,
       cssClass: 'buttonCss',
@@ -122,7 +110,8 @@ export class SpenderPage {
           text: 'Deny',
           role: 'cancel',
           cssClass: 'cancel-button',
-          handler: () => {
+          handler: () => { //runs when cancel button is pressed
+
             payload = {
               "$class": "org.hawkoin.network.InProgress",
               "amount": response.amount,
@@ -130,26 +119,29 @@ export class SpenderPage {
               "authToken": response.authToken,
               "fromUser": response.fromUser,
               "toUser": response.toUser
-            }; //create payload to send to Fabric
-            this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => {
+            }; //create asset payload to send to Fabric
+
+            this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => { //puts updated cancel status for asset
+
               console.log(data); //log response for testing
-              //window.alert("Confirmed/Cancelled!"); //display success in prompt
-              this.showAlert("Success!", "Cancelled!");
-              //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
-              //this.check = true; //checks checkmark
-              this.isRunning = false;
+              this.showAlert("Success!", "Cancelled!"); //shows alert that transaction has been cancelled
+              this.isRunning = false; //sets isRunning to false
+
             }, error => { //catches errors
+
               console.log(error); //log response for testing
-              this.showAlert("Error", error.error.error.message);
-              //window.alert("Error: " + error.error.error.message); //display error in prompt
-              this.isRunning = false;
+              this.showAlert("Error", error.error.error.message); //display error in prompt
+              this.isRunning = false; //sets isRunning to false
+
             });
+
           }
         },
         {
           text: 'Confirm',
           cssClass: 'confirm-button',
-          handler: () => {
+          handler: () => { //runs when confirm button is pressed
+
             payload = {
               "$class": "org.hawkoin.network.InProgress",
               "amount": response.amount,
@@ -157,36 +149,39 @@ export class SpenderPage {
               "authToken": response.authToken,
               "fromUser": response.fromUser,
               "toUser": response.toUser
-            }; //create payload to send to Fabric
-            this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => {
+            }; //create asset payload to send to Fabric
+
+            this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + response.id, JSON.stringify(payload), httpOptions).subscribe(data => { //puts updated confirmed status for asset
+
               console.log(data); //log response for testing
-              //window.alert("Confirmed/Cancelled!"); //display success in prompt
-              this.showAlert("Success!", "Confirmed!");
-              //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
-              //this.check = true; //checks checkmark
-              this.isRunning = false;
+              this.showAlert("Success!", "Confirmed!"); //show alert that transaction has been confirmed
+              this.isRunning = false; //set isRunning to false
+
             }, error => { //catches errors
+
               console.log(error); //log response for testing
-              this.showAlert("Error", error.error.error.message);
-              //window.alert("Error: " + error.error.error.message); //display error in prompt
-              this.isRunning = false;
+              this.showAlert("Error", error.error.error.message); //display error in prompt
+              this.isRunning = false; //set isRunning  false
+
             });
+
           }
         }
       ]
     });
-    await alertConfirm.present();
+
+    await alertConfirm.present(); //displays confirmation alert window
 
   }
 
-  ionViewWillEnter() {
-    console.log("loaded spender!");
-        this.refreshData();
+  ionViewWillEnter() { //runs when page loads
+    console.log("Loaded spender page"); //log for testing
+    this.refreshData(); //begin refresh data
   }
 
-  ionViewWillLeave() {
-        console.log("leaving page");
-      clearTimeout(this.refreshTimer);
-    }
+  ionViewWillLeave() { //runs when page exits
+    console.log("leaving spender page"); //log for testing
+    clearTimeout(this.refreshTimer); //clear refresh timer
+  }
 
 }

@@ -3,7 +3,6 @@
     <ion-nav-link routerDirection="back" slot="start">
       <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
     </ion-nav-link>
-
     <ion-title>
       Spender
     </ion-title>
@@ -14,8 +13,6 @@
     <p id="welcome-heading1"></p>
     Scan to Pay
   </h1>
-
-
   <div class="ion-text-center">
     <qr-code [value]="QRData" [size]="200"></qr-code>
   </div>
@@ -27,5 +24,4 @@
   <h1 hidden="true" id="spender-heading2" style="color:#000000;text-align:center;"></h1>
   <p></p>
   <ion-button (click)="this.navCtrl.navigateForward(['/history']);" expand="block">View Transactions</ion-button>
-
 </ion-content>

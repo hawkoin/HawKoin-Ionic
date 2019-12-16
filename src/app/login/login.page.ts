@@ -20,13 +20,12 @@ import { cloudUrl, httpOptions } from '../app.module';
 export class LoginPage {
 
   user: Observable<firebase.User>; //firebase user
-  accessToken: string = null; //Google acces token string
+  accessToken: string = null; //Google access token string
   email: string = null; //Google email token string
 
-  constructor(/*private router: Router,*/ private afAuth: AngularFireAuth, private navCtrl: NavController,
+  constructor(private afAuth: AngularFireAuth, private navCtrl: NavController,
     private gplus: GooglePlus,
     private platform: Platform, private http: HttpClient) {
-
 
     this.user = this.afAuth.authState; //initialize firbase user
     this.afAuth.auth.getRedirectResult().then( //gets the result from a redirect
@@ -67,7 +66,6 @@ export class LoginPage {
             this.navCtrl.navigateForward(['/spender']); //navigates to spender 
           }
           else {
-
             //verify with backend that user is vendor
             this.http.get(cloudUrl + 'org.hawkoin.network.Vendor?filter=%7B%22where%22%3A%20%7B%22contactInfo.email%22%3A%20%22' + this.email + '%22%7D%20%7D', httpOptions
             ).subscribe((response) => {
@@ -94,32 +92,25 @@ export class LoginPage {
                     window.alert("Error: Your HawKoin account has not been set up. Please contact HawKoin support at dar220@lehigh.edu for assistance.");
                   }
                 });
-
-
               }
             });
-
-
           }
         });
-
       }
     });
-
   }
 
-  async nativeGoogleLogin(): Promise<firebase.User> { //native cordova login
+  async nativeGoogleLogin(): Promise<firebase.User> { //native cordova google login
     try {
-
       const gplusUser = await this.gplus.login({
         'webClientId': '450929965097-n1j7pbt94akt631v9bqdbf65qf2lk45a.apps.googleusercontent.com',
         'offline': true,
         'scopes': 'profile email'
-      }); //signs in with native popup
+      }); //signs in with native popup using popup
 
       const credential = await this.afAuth.auth.signInWithCredential(
         firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
-      ); //signs in with credentials provided
+      ); //signs into firebase with credentials provided
 
       //stores credential information
       this.accessToken = gplusUser.accessToken;
@@ -134,18 +125,12 @@ export class LoginPage {
     }
   }
 
-  async webGoogleLogin(): Promise<void> {
-    try {
+  async webGoogleLogin(): Promise<void> { //web google login
 
-      const provider = new firebase.auth.GoogleAuthProvider().setCustomParameters({ prompt: 'select_account' }); //set up Google as a login provider
-      /* //Old sign in method with popup. This does not work correctly on mobile browsers.
-      const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
-      
-      //stores credential information
-      this.accessToken = credential.credential['accessToken'];
-      this.email = credential.additionalUserInfo.profile['email'];
-      */
-      await this.afAuth.auth.signInWithRedirect(provider); //signs in using a redirect
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider().setCustomParameters({ prompt: 'select_account' }); //set up Google as a login provider with a select account prompt
+
+      await this.afAuth.auth.signInWithRedirect(provider); //signs in using a redirect through firebase
 
     } catch (err) {
       console.log(err); //log error
@@ -153,17 +138,10 @@ export class LoginPage {
 
   }
 
-  async webCheck(): Promise<void> {
-    try {
+  async webCheck(): Promise<void> { //refreshs data if user is already logged into google on web
 
+    try {
       const provider = new firebase.auth.GoogleAuthProvider(); //set up Google as a login provider
-      /* //Old sign in method with popup. This does not work correctly on mobile browsers.
-      const credential = await this.afAuth.auth.signInWithPopup(provider); //signs in with popup
-      
-      //stores credential information
-      this.accessToken = credential.credential['accessToken'];
-      this.email = credential.additionalUserInfo.profile['email'];
-      */
       await this.afAuth.auth.signInWithRedirect(provider); //signs in using a redirect
 
     } catch (err) {
@@ -172,39 +150,41 @@ export class LoginPage {
 
   }
 
- nextPage() {
+  nextPage() { //called when user clicks the continue button 
+
     if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
-    } else {  //calls web login
+    } else {  //calls web check
       this.webCheck();
     }
+
   }
 
-  googleLogin() { //login function
+  googleLogin() { //called when user clicks the login button
+
     if (this.platform.is('cordova')) { //calls native login
       this.nativeGoogleLogin();
     } else {  //calls web login
       this.webGoogleLogin();
     }
+
   }
 
 
-  signOut() { //sign out function
-    this.afAuth.auth.signOut().then(() => {
-      if (this.platform.is('cordova')) { //calls native login
-        this.gplus.logout();
+  signOut() { //called when user clicks the signout button
+
+    this.afAuth.auth.signOut().then(() => { //signs out of google through firebase
+
+      if (this.platform.is('cordova')) { //runs only on cordova
+        this.gplus.logout(); //signs out of native google plugin
       }
 
-    }); //signs out of app and then google account
+    });
+
   }
 
-  showGuide()
-  {
-
-    window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_blank');
-    
+  showGuide() { //displays the user guide on google drive using system browser
+    window.open('https://drive.google.com/open?id=1jes1QwQE08pRzHLoi_iJQHumYFIFjNofqjV-_hozmcI', '_system');
   }
-
-
 
 }

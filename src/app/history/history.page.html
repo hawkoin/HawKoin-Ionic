@@ -3,7 +3,6 @@
     <ion-nav-link routerDirection="back" slot="start">
       <ion-button (click)="this.navCtrl.pop()">Back</ion-button>
     </ion-nav-link>
-
     <ion-title>
       Transaction History
     </ion-title>
@@ -12,13 +11,13 @@
 <ion-content padding id="page5">
   <ion-virtual-scroll [items]="items">
     <ion-card *virtualItem="let item">
- <ion-card-header>
-      <ion-card-title style="font-size:18px">{{ item.transaction }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>{{ item.vendor }} </ion-card-content>
-    <ion-card-content>{{ item.spender }}</ion-card-content>
-    <ion-card-content>{{ item.amount }}</ion-card-content>
-    <ion-card-content>{{ item.date }}</ion-card-content>
+      <ion-card-header>
+        <ion-card-title style="font-size:18px">{{ item.transaction }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>{{ item.vendor }} </ion-card-content>
+      <ion-card-content>{{ item.spender }}</ion-card-content>
+      <ion-card-content>{{ item.amount }}</ion-card-content>
+      <ion-card-content>{{ item.date }}</ion-card-content>
     </ion-card>
   </ion-virtual-scroll>
 </ion-content>

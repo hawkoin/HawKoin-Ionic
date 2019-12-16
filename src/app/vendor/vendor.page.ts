@@ -7,35 +7,31 @@ import { cloudUrl, httpOptions } from '../app.module';
 
 import { LoadingController } from '@ionic/angular';
 
-
-
 @Component({
   selector: 'page-vendor',
   templateUrl: 'vendor.page.html'
 })
 export class VendorPage {
-  check: Boolean = false; //variable for checkboz
   amount: number = null; //variable to store amount to transfer
-  fromID = null;
-  fromClass = null;
-  vendorID = localStorage.getItem("IDNum"); //retrieves vendor num from local storage
+  fromID = null; //variable to store ID of spender
+  fromClass = null; //variable to store type of spender
+  vendorID = null;  //stores vendor ID
   fromAuthToken: String = null; //variable to store fromAuthToken
-  payload = null; //varirable to store payload on server
-  loading = null;
-  InProgressID = null;
-  isRunning: Boolean = false;
-  refreshTimer:any;
+  payload = null; //variable to store payload on server
+  loading = null; //variable for loading dialog
+  InProgressID = null; //variable to store ID of an in progress transaction 
+  isRunning: Boolean = false; //boolean to determine is asset check is running or not
+  refreshTimer: any; //variable used to store refresh timer for asset check
 
   constructor(public navCtrl: NavController, private barcodeScanner: BarcodeScanner, private http: HttpClient, public loadingCtrl: LoadingController, private atrCtrl: AlertController) {
-
+    this.vendorID = localStorage.getItem("IDNum"); //retrieves vendor ID from local storage
   }
 
-  amountCheck() {
+  amountCheck() { //called to check if inputed amount is valid
     return this.amount > 0;
   }
 
-
-  scanCode() { //called when to scan code
+  scanCode() { //called to scan code
 
     if (this.amountCheck()) //checks if value was entered for amount
     {
@@ -45,23 +41,22 @@ export class VendorPage {
 
     }
     else {
-      this.showAlert('Error', "Please enter a positive value for amount.");
-      //window.alert("Please enter a positive value for amount."); //displays an alert when amount is not entered
+      this.showAlert('Error', "Please enter a positive value for amount."); //displays an alert when amount is not entered
     }
 
   }
 
-  processBarcode(scannedCode: String) {
+  processBarcode(scannedCode: String) { //process the scanned code
+
     //splits up data from QR code
     this.fromClass = scannedCode.split(" ")[0];
     this.fromID = scannedCode.split(" ")[1];
     this.fromAuthToken = scannedCode.split(" ")[2];
 
+    this.presentLoading(); //present loading dialog
+    this.InProgressID = this.generateUUID(); //generate a new ID for asset tracking
 
-    this.presentLoading();
-    this.InProgressID = this.generateUUID();
-
-    //post the InProgressAsset
+    //post the InProgress asset
     this.payload = {
       "$class": "org.hawkoin.network.InProgress",
       "id": this.InProgressID,
@@ -73,28 +68,26 @@ export class VendorPage {
     }; //create payload to send to Fabric
 
     this.http.post(cloudUrl + 'org.hawkoin.network.InProgress', JSON.stringify(this.payload), httpOptions).subscribe(data => {
-      console.log(data);
-      this.isRunning = false;
-      this.refreshData();
-      //log response for testing
-      //window.alert("Success posting!"); //display success in prompt
+
+      console.log(data); //log response for testing
+      this.isRunning = false; //set isRunning check to false
+      this.refreshData(); //call refresh to check InProgress status
 
     }, error => { //catches errors
+
       console.log(error); //log response for testing
-      this.loading.dismiss();
-      this.showAlert("Error", error.error.error.message);
-      //window.alert("Error: " + error.error.error.message); //display error in prompt
-      return;
+      this.loading.dismiss(); //dimiss loading screen
+      this.showAlert("Error", error.error.error.message); //display error
+      return; //exit processBarcode
+
     });
 
   }
 
-  clearPage() //called to refresh page
+  clearPage() //called to clear page
   {
     this.amount = null; //clears amount
-    document.getElementById("vendor-checkbox1inner").innerHTML = ""; //clears checkbox
-    this.check = false; //uncheck checkmark
-    clearTimeout(this.refreshTimer);
+    clearTimeout(this.refreshTimer); //clears refreshTimer
   }
 
   //Source: https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -114,42 +107,53 @@ export class VendorPage {
     });
   }
 
-  async presentLoading() {
-    this.loading = await this.loadingCtrl.create({
+  async presentLoading() { //present a loading dialog
+    this.loading = await this.loadingCtrl.create({ //creates the loading dialog
       message: 'Waiting for Confimation',
       spinner: 'crescent'
     });
-    await this.loading.present();
+    await this.loading.present(); //presents the loading dialog
 
-    await this.loading.onDidDismiss();
+    await this.loading.onDidDismiss(); //waits until dialog has been dismissed
 
-    console.log('Loading dismissed!');
+    console.log('Loading dismissed!'); //log dismissed for testing
   }
 
-  refreshData(): void {
+  async showAlert(title: string, subTitle: string) { //present a alert dialog
 
+    let alert = await this.atrCtrl.create({ //create the alert dialog
+      header: title,
+      subHeader: subTitle,
+      buttons: ['OK']
+    });
 
+    alert.present(); //present the alert dialog
+
+  }
+
+  refreshData(): void { //call to check status of InProgress asset
+
+    //check the asset status
     this.http.get(cloudUrl + 'org.hawkoin.network.InProgress' + '?filter=%7B%22where%22%3A%7B%22id%22%3A%22' + this.InProgressID + '%22%7D%7D', httpOptions).subscribe((response) => { //reguests list from Fabric        var parsedJ = JSON.parse(JSON.stringify(response));
-      var parsedJ = JSON.parse(JSON.stringify(response));
-      if (!this.isRunning && parsedJ[0] && parsedJ[0].status == "CONFIRMED") {
-        //window.alert("true1");
-        this.isRunning = true;
+
+      var parsedJ = JSON.parse(JSON.stringify(response)); //parse the response
+
+      if (!this.isRunning && parsedJ[0] && parsedJ[0].status == "CONFIRMED") { //if refresh is not already running and status is confirmed then continue
+        this.isRunning = true; //set isRunning to true so refreshData does not run again while current asset is being processed
         this.payload = {
           "$class": "org.hawkoin.network.TransferFunds",
           "amount": this.amount,
           "authToken": this.fromAuthToken,
           "fromUser": (this.fromClass + '#' + this.fromID),
           "toUser": ('resource:org.hawkoin.network.Vendor#' + this.vendorID)
-        }; //create payload to send to Fabric
+        }; //create transaction payload to send to Fabric
 
+        //post transaction payload to Fabric
         this.http.post(cloudUrl + 'org.hawkoin.network.TransferFunds', JSON.stringify(this.payload), httpOptions).subscribe(data => {
           console.log(data); //log response for testing
-          this.loading.dismiss();
-          this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID);
-          //this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.fromAuthToken);
-          // window.alert("Success! \n Amount: " + this.amount + " From ID: " + this.fromID + " Auth Token: " + this.fromAuthToken); //display success in prompt
-          //document.getElementById("vendor-checkbox1inner").innerHTML = "Amount: " + this.amount + " From ID: " + this.fromID + "Auth Token: " + this.authToken; //displays amount and recipient ids
-          //this.check = true; //checks checkmark
+          this.loading.dismiss(); //dismiss the loading dialog
+          this.showAlert("Success!", "Amount: " + this.amount + " From ID: " + this.fromID); //show a success alert 
+
           this.payload = {
             "$class": "org.hawkoin.network.InProgress",
             "amount": parsedJ[0].amount,
@@ -157,21 +161,24 @@ export class VendorPage {
             "authToken": parsedJ[0].authToken,
             "fromUser": parsedJ[0].fromUser,
             "toUser": parsedJ[0].toUser
-          }; //create payload to send to Fabric
+          }; //create updated asset payload to send to Fabric
 
+          //put updated asset information to Fabric
           this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
             console.log(data); //log response for testing
           }, error => { //catches errors
             console.log(error); //log response for testing
           });
 
+          this.clearPage(); //clear out any data on the page
+          clearTimeout(this.refreshTimer); //clear out the refresh timer
 
-          this.clearPage();
         }, error => { //catches errors
+
           console.log(error); //log response for testing
-          this.loading.dismiss();
-          this.showAlert("Error", error.error.error.message);
-          //window.alert("Error: " + error.error.error.message); //display error in prompt
+          this.loading.dismiss(); //dismiss dialog box
+          this.showAlert("Error", error.error.error.message); //display error alert
+
           this.payload = {
             "$class": "org.hawkoin.network.InProgress",
             "amount": parsedJ[0].amount,
@@ -179,48 +186,45 @@ export class VendorPage {
             "authToken": parsedJ[0].authToken,
             "fromUser": parsedJ[0].fromUser,
             "toUser": parsedJ[0].toUser
-          }; //create payload to send to Fabric
+          }; //create updated failed asset payload to send to Fabric
 
+          //send updated asset to Fabric
           this.http.put(cloudUrl + 'org.hawkoin.network.InProgress' + "/" + this.InProgressID, JSON.stringify(this.payload), httpOptions).subscribe(data => {
             console.log(data); //log response for testing
           }, error => { //catches errors
             console.log(error); //log response for testing
           });
 
-          this.clearPage();
+          this.clearPage(); //clear out any data on the page
+          clearTimeout(this.refreshTimer); //clear out the refresh timer          
+
         });
       }
-      else if (!this.isRunning && parsedJ[0] && parsedJ[0].status == "CANCELLED") {
-        //window.alert("true2");
-        this.isRunning = true;
-        this.loading.dismiss();
-        this.showAlert("Error", "Transaction cancelled by spender");
-        //window.alert("Transaction cancelled by spender");
-        this.clearPage();
+      else if (!this.isRunning && parsedJ[0] && parsedJ[0].status == "CANCELLED") { //check if refresh is running and status has been cancelled
+
+        this.isRunning = true; //set isRunning to true so refreshData does not run again while current asset is being processed
+        this.loading.dismiss(); //dismiss the loading dialog
+        this.showAlert("Error", "Transaction cancelled by spender"); //show error dialog
+
+
+        this.clearPage(); //clear out any data on the page
+        clearTimeout(this.refreshTimer); //clear out the refresh timer        
+
       }
-      else {
-        this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list eery 2 seconds
+      else { //continue to refresh to check asset status
+
+        this.refreshTimer = setTimeout(this.refreshData.bind(this), 500); //sets a timeout to refresh the list evert 0.5 seconds
+
       }
 
     });
 
-
-
   }
 
-  async showAlert(title: string, subTitle: string) {
-    let alert = await this.atrCtrl.create({
-      header: title,
-      subHeader: subTitle,
-      buttons: ['OK']
-    });
-    alert.present();
+  ionViewWillLeave() { //runs when view leaves 
+    console.log("Leaving vendor page"); //log for testing
+    clearTimeout(this.refreshTimer); //clear out the refresh timer 
   }
-
-  ionViewWillLeave() {
-        console.log("leaving page");
-      clearTimeout(this.refreshTimer);
-    }
 
 
 }

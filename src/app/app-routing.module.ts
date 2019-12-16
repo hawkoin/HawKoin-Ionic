@@ -8,7 +8,6 @@ const routes: Routes = [
   { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
   { path: 'spender', loadChildren: './spender/spender.module#SpenderPageModule' },
   { path: 'vendor', loadChildren: './vendor/vendor.module#VendorPageModule' },
-
 ];
 
 @NgModule({

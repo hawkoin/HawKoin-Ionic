@@ -10,8 +10,8 @@ import { cloudUrl, httpOptions } from '../app.module'
 })
 export class AdminPage {
 
-items: any[] = []; //array to store each transaction
-refreshTimer:any;
+  items: any[] = []; //array to store each transaction
+  refreshTimer: any; //variable to store refresh timer
 
   constructor(public navCtrl: NavController, private http: HttpClient, private ref: ChangeDetectorRef) {
   }
@@ -26,29 +26,28 @@ refreshTimer:any;
         this.items.push({ //adds transaction to list 
           transaction: "Transaction # " + response[i].transactionId,
           vendor: "From User: " + response[i].fromUser,
-          spender: "To User: " + response[i].toUser, 
+          spender: "To User: " + response[i].toUser,
           amount: "Amount: " + response[i].amount,
           date: "Date: " + response[i].timestamp
         });
       }
+
     });
 
 
-    this.refreshTimer = setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list eery 2 seconds
-        this.ref.detectChanges();
-
-   
+    this.refreshTimer = setTimeout(this.refreshData.bind(this), 5000); //sets a timeout to refresh the list every 5 seconds
+    this.ref.detectChanges(); //forces angular to detect any changes made to list
 
   }
 
-      ionViewWillLeave() {
-        console.log("leaving page");
-    clearTimeout(this.refreshTimer);
-    }
+  ionViewWillEnter() { //runs when page loads
+    console.log("Loaded admin page"); //log for testing
+    this.refreshData(); //call refresh data to refresh list transactions
+  }
 
-    ionViewWillEnter() {
-    console.log("loaded admin!");
-        this.refreshData();
+  ionViewWillLeave() { //runs when page exits
+    console.log("Leaving admin page"); //log for testing
+    clearTimeout(this.refreshTimer); //clears refresh timer
   }
 
 }

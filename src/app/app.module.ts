@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -22,13 +21,10 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 const firebaseConfig = {
-  // see firbaseConfig doc
-    
-
-
+  // see firbaseConfig doc for API key
 }
 
-export const cloudUrl: string = 'https://35.188.189.147.xip.io:3000/api/';
+export const cloudUrl: string = 'https://35.188.189.147.xip.io:3000/api/'; //Hyperledger REST API URL
 
 export const httpOptions = { //constant for http headers
   headers: new HttpHeaders({
